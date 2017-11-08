@@ -1,18 +1,16 @@
 module App exposing (..)
 
-import Config
 import Navigation
-import Components.Home.Main as Home exposing (view)
-import Html exposing (text, Html)
+import Html exposing (div, text)
 
 
 type alias Model =
-    Maybe a
+    String
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Just "Phoenix Elm Starter", Cmd.none )
+    ( "Phoenix Elm Starter", Cmd.none )
 
 
 type Msg
@@ -22,7 +20,7 @@ type Msg
 update msg model =
     case msg of
         NoOp ->
-            model
+            ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -31,8 +29,15 @@ subscriptions model =
 
 
 view model =
-    App.Html
+    div []
+        [ text model
+        ]
 
 
 main =
-    Navigation.program
+    Html.program
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }

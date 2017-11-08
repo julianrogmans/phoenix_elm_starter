@@ -13,13 +13,6 @@ defmodule IspychangeElmWeb.Router do
     plug :accepts, ["json"]
   end
 
-  if Mix.env == :dev do
-    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: IspychangeElmWeb.Schema
-  end
-
-  forward "/graphql", Absinthe.Plug,
-    schema: IspychangeElmWeb.Schema
-
   scope "/", IspychangeElmWeb do
     pipe_through :browser # Use the default browser stack
 
