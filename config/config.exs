@@ -6,15 +6,15 @@
 use Mix.Config
 
 # General application configuration
-config :ispychange_elm,
-  ecto_repos: [IspychangeElm.Repo]
+config :phoenix_elm_starter,
+  ecto_repos: [PhoenixElmStarter.Repo]
 
 # Configures the endpoint
-config :ispychange_elm, IspychangeElmWeb.Endpoint,
+config :phoenix_elm_starter, PhoenixElmStarterWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "cVWqKEo/WOwBIlHjYt59aHtZzapCUr7o7MLS9edpp4vubVbSGt+JUyy0eUwSndgL",
-  render_errors: [view: IspychangeElmWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: IspychangeElm.PubSub,
+  render_errors: [view: PhoenixElmStarterWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: PhoenixElmStarter.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger

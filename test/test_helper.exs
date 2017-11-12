@@ -1,4 +1,4 @@
 ExUnit.start()
 
-Ecto.Adapters.SQL.Sandbox.mode(IspychangeElm.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(PhoenixElmStarter.Repo, :manual)
 

@@ -1,9 +1,9 @@
-defmodule IspychangeElm.Mixfile do
+defmodule PhoenixElmStarter.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :ispychange_elm,
+      app: :phoenix_elm_starter,
       version: "0.0.1",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env),
@@ -19,7 +19,7 @@ defmodule IspychangeElm.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {IspychangeElm.Application, []},
+      mod: {PhoenixElmStarter.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -40,7 +40,8 @@ defmodule IspychangeElm.Mixfile do
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:absinthe_plug, "~> 1.3"}
     ]
   end
 

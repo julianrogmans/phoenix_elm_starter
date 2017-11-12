@@ -1,4 +1,4 @@
-# IspychangeElm
+# PhoenixElmStarter
 
 To start your Phoenix server:
 

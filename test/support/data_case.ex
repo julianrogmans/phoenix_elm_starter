@@ -1,4 +1,4 @@
-defmodule IspychangeElm.DataCase do
+defmodule PhoenixElmStarter.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,20 +16,20 @@ defmodule IspychangeElm.DataCase do
 
   using do
     quote do
-      alias IspychangeElm.Repo
+      alias PhoenixElmStarter.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import IspychangeElm.DataCase
+      import PhoenixElmStarter.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(IspychangeElm.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(PhoenixElmStarter.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(IspychangeElm.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(PhoenixElmStarter.Repo, {:shared, self()})
     end
 
     :ok

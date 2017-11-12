@@ -1,5 +1,5 @@
-defmodule IspychangeElmWeb.PageControllerTest do
-  use IspychangeElmWeb.ConnCase
+defmodule PhoenixElmStarterWeb.PageControllerTest do
+  use PhoenixElmStarterWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

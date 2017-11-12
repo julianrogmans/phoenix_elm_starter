@@ -1,3 +1,3 @@
-defmodule IspychangeElmWeb.LayoutViewTest do
-  use IspychangeElmWeb.ConnCase, async: true
+defmodule PhoenixElmStarterWeb.LayoutViewTest do
+  use PhoenixElmStarterWeb.ConnCase, async: true
 end
