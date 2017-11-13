@@ -1,12 +1,13 @@
 module Queries exposing (..)
 
-import GraphQElm exposing (Query)
+import GraphQElm exposing (Query, gql)
 
 
-testApiQuery : Query
+testApiQuery : String
 testApiQuery =
-    { resource = "test"
-    , fields = [ "hello" ]
-    , args = []
-    , alias = ""
-    }
+    gql
+        { resource = "test"
+        , fields = [ "hello" ]
+        , args = []
+        , alias = ""
+        }

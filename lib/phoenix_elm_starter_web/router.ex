@@ -13,21 +13,15 @@ defmodule PhoenixElmStarterWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", PhoenixElmStarterWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
-  end
-
   forward "/graphql", Absinthe.Plug, schema: PhoenixElmStarterWeb.Schema
   forward "/graphiql", Absinthe.Plug.GraphiQL, schema: PhoenixElmStarterWeb.Schema
 
-  scope "/api", PhoenixElmStarterWeb do
-    pipe_through :api
-
-    get "/test", PageController, :api_test
+  scope "/", PhoenixElmStarterWeb do
+    pipe_through :browser # Use the default browser stack
+    
+    get "/", PageController, :index
+    get "/:page", PageController, :index
   end
-
   # Other scopes may use custom stacks.
   # scope "/api", PhoenixElmStarterWeb do
   #   pipe_through :api

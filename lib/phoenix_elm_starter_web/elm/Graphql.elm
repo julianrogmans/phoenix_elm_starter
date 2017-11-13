@@ -3,7 +3,7 @@ module Graphql exposing (query)
 import Http exposing (request, stringBody, expectJson)
 import GraphQElm exposing (Query, gql)
 import Json.Decode as Decode
-import Msg exposing (Msg(GraphqlMsg))
+import Msg exposing (Msg(TestApiRequest))
 
 
 query query_ decoder =
@@ -15,7 +15,7 @@ query query_ decoder =
             baseDecoder decoder
     in
         baseRequest requestQuery requestDecoder
-            |> Http.send GraphqlMsg
+            |> Http.send TestApiRequest
 
 
 baseRequest body decoder =
@@ -31,7 +31,7 @@ baseRequest body decoder =
 
 
 baseQuery query =
-    "query{" ++ gql query ++ "}"
+    "query{" ++ query ++ "}"
 
 
 baseDecoder decoder =

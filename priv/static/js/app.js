@@ -13973,9 +13973,526 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
 var _elm_lang$html$Html_Keyed$node = _elm_lang$virtual_dom$VirtualDom$keyedNode;
 var _elm_lang$html$Html_Keyed$ol = _elm_lang$html$Html_Keyed$node('ol');
 var _elm_lang$html$Html_Keyed$ul = _elm_lang$html$Html_Keyed$node('ul');
+
+var _elm_lang$navigation$Native_Navigation = function() {
+
+
+// FAKE NAVIGATION
+
+function go(n)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		if (n !== 0)
+		{
+			history.go(n);
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function pushState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.pushState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+function replaceState(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		history.replaceState({}, '', url);
+		callback(_elm_lang$core$Native_Scheduler.succeed(getLocation()));
+	});
+}
+
+
+// REAL NAVIGATION
+
+function reloadPage(skipCache)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		document.location.reload(skipCache);
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function setLocation(url)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		try
+		{
+			window.location = url;
+		}
+		catch(err)
+		{
+			// Only Firefox can throw a NS_ERROR_MALFORMED_URI exception here.
+			// Other browsers reload the page, so let's be consistent about that.
+			document.location.reload(false);
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+
+// GET LOCATION
+
+function getLocation()
+{
+	var location = document.location;
+
+	return {
+		href: location.href,
+		host: location.host,
+		hostname: location.hostname,
+		protocol: location.protocol,
+		origin: location.origin,
+		port_: location.port,
+		pathname: location.pathname,
+		search: location.search,
+		hash: location.hash,
+		username: location.username,
+		password: location.password
+	};
+}
+
+
+// DETECT IE11 PROBLEMS
+
+function isInternetExplorer11()
+{
+	return window.navigator.userAgent.indexOf('Trident') !== -1;
+}
+
+
+return {
+	go: go,
+	setLocation: setLocation,
+	reloadPage: reloadPage,
+	pushState: pushState,
+	replaceState: replaceState,
+	getLocation: getLocation,
+	isInternetExplorer11: isInternetExplorer11
+};
+
+}();
+
+var _elm_lang$navigation$Navigation$replaceState = _elm_lang$navigation$Native_Navigation.replaceState;
+var _elm_lang$navigation$Navigation$pushState = _elm_lang$navigation$Native_Navigation.pushState;
+var _elm_lang$navigation$Navigation$go = _elm_lang$navigation$Native_Navigation.go;
+var _elm_lang$navigation$Navigation$reloadPage = _elm_lang$navigation$Native_Navigation.reloadPage;
+var _elm_lang$navigation$Navigation$setLocation = _elm_lang$navigation$Native_Navigation.setLocation;
+var _elm_lang$navigation$Navigation_ops = _elm_lang$navigation$Navigation_ops || {};
+_elm_lang$navigation$Navigation_ops['&>'] = F2(
+	function (task1, task2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p0) {
+				return task2;
+			},
+			task1);
+	});
+var _elm_lang$navigation$Navigation$notify = F3(
+	function (router, subs, location) {
+		var send = function (_p1) {
+			var _p2 = _p1;
+			return A2(
+				_elm_lang$core$Platform$sendToApp,
+				router,
+				_p2._0(location));
+		};
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(_elm_lang$core$List$map, send, subs)),
+			_elm_lang$core$Task$succeed(
+				{ctor: '_Tuple0'}));
+	});
+var _elm_lang$navigation$Navigation$cmdHelp = F3(
+	function (router, subs, cmd) {
+		var _p3 = cmd;
+		switch (_p3.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$go(_p3._0);
+			case 'New':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$pushState(_p3._0));
+			case 'Modify':
+				return A2(
+					_elm_lang$core$Task$andThen,
+					A2(_elm_lang$navigation$Navigation$notify, router, subs),
+					_elm_lang$navigation$Navigation$replaceState(_p3._0));
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$setLocation(_p3._0);
+			default:
+				return _elm_lang$navigation$Navigation$reloadPage(_p3._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$killPopWatcher = function (popWatcher) {
+	var _p4 = popWatcher;
+	if (_p4.ctor === 'Normal') {
+		return _elm_lang$core$Process$kill(_p4._0);
+	} else {
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Process$kill(_p4._0),
+			_elm_lang$core$Process$kill(_p4._1));
+	}
+};
+var _elm_lang$navigation$Navigation$onSelfMsg = F3(
+	function (router, location, state) {
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			A3(_elm_lang$navigation$Navigation$notify, router, state.subs, location),
+			_elm_lang$core$Task$succeed(state));
+	});
+var _elm_lang$navigation$Navigation$subscription = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$command = _elm_lang$core$Native_Platform.leaf('Navigation');
+var _elm_lang$navigation$Navigation$Location = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {href: a, host: b, hostname: c, protocol: d, origin: e, port_: f, pathname: g, search: h, hash: i, username: j, password: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _elm_lang$navigation$Navigation$State = F2(
+	function (a, b) {
+		return {subs: a, popWatcher: b};
+	});
+var _elm_lang$navigation$Navigation$init = _elm_lang$core$Task$succeed(
+	A2(
+		_elm_lang$navigation$Navigation$State,
+		{ctor: '[]'},
+		_elm_lang$core$Maybe$Nothing));
+var _elm_lang$navigation$Navigation$Reload = function (a) {
+	return {ctor: 'Reload', _0: a};
+};
+var _elm_lang$navigation$Navigation$reload = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(false));
+var _elm_lang$navigation$Navigation$reloadAndSkipCache = _elm_lang$navigation$Navigation$command(
+	_elm_lang$navigation$Navigation$Reload(true));
+var _elm_lang$navigation$Navigation$Visit = function (a) {
+	return {ctor: 'Visit', _0: a};
+};
+var _elm_lang$navigation$Navigation$load = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Visit(url));
+};
+var _elm_lang$navigation$Navigation$Modify = function (a) {
+	return {ctor: 'Modify', _0: a};
+};
+var _elm_lang$navigation$Navigation$modifyUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Modify(url));
+};
+var _elm_lang$navigation$Navigation$New = function (a) {
+	return {ctor: 'New', _0: a};
+};
+var _elm_lang$navigation$Navigation$newUrl = function (url) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$New(url));
+};
+var _elm_lang$navigation$Navigation$Jump = function (a) {
+	return {ctor: 'Jump', _0: a};
+};
+var _elm_lang$navigation$Navigation$back = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(0 - n));
+};
+var _elm_lang$navigation$Navigation$forward = function (n) {
+	return _elm_lang$navigation$Navigation$command(
+		_elm_lang$navigation$Navigation$Jump(n));
+};
+var _elm_lang$navigation$Navigation$cmdMap = F2(
+	function (_p5, myCmd) {
+		var _p6 = myCmd;
+		switch (_p6.ctor) {
+			case 'Jump':
+				return _elm_lang$navigation$Navigation$Jump(_p6._0);
+			case 'New':
+				return _elm_lang$navigation$Navigation$New(_p6._0);
+			case 'Modify':
+				return _elm_lang$navigation$Navigation$Modify(_p6._0);
+			case 'Visit':
+				return _elm_lang$navigation$Navigation$Visit(_p6._0);
+			default:
+				return _elm_lang$navigation$Navigation$Reload(_p6._0);
+		}
+	});
+var _elm_lang$navigation$Navigation$Monitor = function (a) {
+	return {ctor: 'Monitor', _0: a};
+};
+var _elm_lang$navigation$Navigation$program = F2(
+	function (locationToMessage, stuff) {
+		var init = stuff.init(
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$program(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$programWithFlags = F2(
+	function (locationToMessage, stuff) {
+		var init = function (flags) {
+			return A2(
+				stuff.init,
+				flags,
+				_elm_lang$navigation$Native_Navigation.getLocation(
+					{ctor: '_Tuple0'}));
+		};
+		var subs = function (model) {
+			return _elm_lang$core$Platform_Sub$batch(
+				{
+					ctor: '::',
+					_0: _elm_lang$navigation$Navigation$subscription(
+						_elm_lang$navigation$Navigation$Monitor(locationToMessage)),
+					_1: {
+						ctor: '::',
+						_0: stuff.subscriptions(model),
+						_1: {ctor: '[]'}
+					}
+				});
+		};
+		return _elm_lang$html$Html$programWithFlags(
+			{init: init, view: stuff.view, update: stuff.update, subscriptions: subs});
+	});
+var _elm_lang$navigation$Navigation$subMap = F2(
+	function (func, _p7) {
+		var _p8 = _p7;
+		return _elm_lang$navigation$Navigation$Monitor(
+			function (_p9) {
+				return func(
+					_p8._0(_p9));
+			});
+	});
+var _elm_lang$navigation$Navigation$InternetExplorer = F2(
+	function (a, b) {
+		return {ctor: 'InternetExplorer', _0: a, _1: b};
+	});
+var _elm_lang$navigation$Navigation$Normal = function (a) {
+	return {ctor: 'Normal', _0: a};
+};
+var _elm_lang$navigation$Navigation$spawnPopWatcher = function (router) {
+	var reportLocation = function (_p10) {
+		return A2(
+			_elm_lang$core$Platform$sendToSelf,
+			router,
+			_elm_lang$navigation$Native_Navigation.getLocation(
+				{ctor: '_Tuple0'}));
+	};
+	return _elm_lang$navigation$Native_Navigation.isInternetExplorer11(
+		{ctor: '_Tuple0'}) ? A3(
+		_elm_lang$core$Task$map2,
+		_elm_lang$navigation$Navigation$InternetExplorer,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)),
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'hashchange', _elm_lang$core$Json_Decode$value, reportLocation))) : A2(
+		_elm_lang$core$Task$map,
+		_elm_lang$navigation$Navigation$Normal,
+		_elm_lang$core$Process$spawn(
+			A3(_elm_lang$dom$Dom_LowLevel$onWindow, 'popstate', _elm_lang$core$Json_Decode$value, reportLocation)));
+};
+var _elm_lang$navigation$Navigation$onEffects = F4(
+	function (router, cmds, subs, _p11) {
+		var _p12 = _p11;
+		var _p15 = _p12.popWatcher;
+		var stepState = function () {
+			var _p13 = {ctor: '_Tuple2', _0: subs, _1: _p15};
+			_v6_2:
+			do {
+				if (_p13._0.ctor === '[]') {
+					if (_p13._1.ctor === 'Just') {
+						return A2(
+							_elm_lang$navigation$Navigation_ops['&>'],
+							_elm_lang$navigation$Navigation$killPopWatcher(_p13._1._0),
+							_elm_lang$core$Task$succeed(
+								A2(_elm_lang$navigation$Navigation$State, subs, _elm_lang$core$Maybe$Nothing)));
+					} else {
+						break _v6_2;
+					}
+				} else {
+					if (_p13._1.ctor === 'Nothing') {
+						return A2(
+							_elm_lang$core$Task$map,
+							function (_p14) {
+								return A2(
+									_elm_lang$navigation$Navigation$State,
+									subs,
+									_elm_lang$core$Maybe$Just(_p14));
+							},
+							_elm_lang$navigation$Navigation$spawnPopWatcher(router));
+					} else {
+						break _v6_2;
+					}
+				}
+			} while(false);
+			return _elm_lang$core$Task$succeed(
+				A2(_elm_lang$navigation$Navigation$State, subs, _p15));
+		}();
+		return A2(
+			_elm_lang$navigation$Navigation_ops['&>'],
+			_elm_lang$core$Task$sequence(
+				A2(
+					_elm_lang$core$List$map,
+					A2(_elm_lang$navigation$Navigation$cmdHelp, router, subs),
+					cmds)),
+			stepState);
+	});
+_elm_lang$core$Native_Platform.effectManagers['Navigation'] = {pkg: 'elm-lang/navigation', init: _elm_lang$navigation$Navigation$init, onEffects: _elm_lang$navigation$Navigation$onEffects, onSelfMsg: _elm_lang$navigation$Navigation$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$navigation$Navigation$cmdMap, subMap: _elm_lang$navigation$Navigation$subMap};
 
 var _elm_lang$window$Native_Window = function()
 {
@@ -14098,6 +14615,279 @@ var _elm_lang$window$Window$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Window'] = {pkg: 'elm-lang/window', init: _elm_lang$window$Window$init, onEffects: _elm_lang$window$Window$onEffects, onSelfMsg: _elm_lang$window$Window$onSelfMsg, tag: 'sub', subMap: _elm_lang$window$Window$subMap};
+
+var _jvdvleuten$url_parser_combinator$UrlParser$urlSegments = function (url) {
+	return A2(
+		_elm_lang$core$List$filter,
+		function (_p0) {
+			return !_elm_lang$core$String$isEmpty(_p0);
+		},
+		A2(_elm_lang$core$String$split, '/', url));
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$parse = F2(
+	function (_p1, input) {
+		var _p2 = _p1;
+		return _p2._0(input);
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$parseUrl = F2(
+	function (parser, url) {
+		var _p3 = A2(
+			_jvdvleuten$url_parser_combinator$UrlParser$parse,
+			parser,
+			_jvdvleuten$url_parser_combinator$UrlParser$urlSegments(url));
+		if (_p3.ctor === '[]') {
+			return _elm_lang$core$Maybe$Nothing;
+		} else {
+			if ((_p3._0.ctor === '_Tuple2') && (_p3._1.ctor === '[]')) {
+				if (_p3._0._1.ctor === '[]') {
+					return _elm_lang$core$Maybe$Just(_p3._0._0);
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		}
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$parseLocation = F2(
+	function (parser, location) {
+		return A2(_jvdvleuten$url_parser_combinator$UrlParser$parseUrl, parser, location.pathname);
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$Parser = function (a) {
+	return {ctor: 'Parser', _0: a};
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$string = _jvdvleuten$url_parser_combinator$UrlParser$Parser(
+	function (input) {
+		var _p4 = input;
+		if (_p4.ctor === '[]') {
+			return {ctor: '[]'};
+		} else {
+			return {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: _p4._0, _1: _p4._1},
+				_1: {ctor: '[]'}
+			};
+		}
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$return = function (x) {
+	return _jvdvleuten$url_parser_combinator$UrlParser$Parser(
+		function (input) {
+			return {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: x, _1: input},
+				_1: {ctor: '[]'}
+			};
+		});
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$fail = _jvdvleuten$url_parser_combinator$UrlParser$Parser(
+	function (input) {
+		return {ctor: '[]'};
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$bind = F2(
+	function (createParserB, parserA) {
+		return _jvdvleuten$url_parser_combinator$UrlParser$Parser(
+			function (input) {
+				var _p5 = A2(_jvdvleuten$url_parser_combinator$UrlParser$parse, parserA, input);
+				if (_p5.ctor === '[]') {
+					return {ctor: '[]'};
+				} else {
+					return A2(
+						_elm_lang$core$List$concatMap,
+						function (_p6) {
+							var _p7 = _p6;
+							return A2(
+								_jvdvleuten$url_parser_combinator$UrlParser$parse,
+								createParserB(_p7._0),
+								_p7._1);
+						},
+						_p5);
+				}
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$bind);
+var _jvdvleuten$url_parser_combinator$UrlParser$int = A2(
+	_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+	_jvdvleuten$url_parser_combinator$UrlParser$string,
+	function (input) {
+		var _p8 = _elm_lang$core$String$toInt(input);
+		if (_p8.ctor === 'Ok') {
+			return _jvdvleuten$url_parser_combinator$UrlParser$return(_p8._0);
+		} else {
+			return _jvdvleuten$url_parser_combinator$UrlParser$fail;
+		}
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$path = function (path) {
+	return A2(
+		_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+		_jvdvleuten$url_parser_combinator$UrlParser$string,
+		function (input) {
+			return _elm_lang$core$Native_Utils.eq(input, path) ? _jvdvleuten$url_parser_combinator$UrlParser$return(input) : _jvdvleuten$url_parser_combinator$UrlParser$fail;
+		});
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$apply = F2(
+	function (parserA, parserFunc) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+			parserFunc,
+			function (resultFunc) {
+				return A2(
+					_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+					parserA,
+					function (resultA) {
+						return _jvdvleuten$url_parser_combinator$UrlParser$return(
+							resultFunc(resultA));
+					});
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['<*>'] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$apply);
+var _jvdvleuten$url_parser_combinator$UrlParser$andThen = F2(
+	function (parserB, parserA) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+			parserA,
+			function (resultA) {
+				return A2(
+					_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+					parserB,
+					function (resultB) {
+						return _jvdvleuten$url_parser_combinator$UrlParser$return(
+							{ctor: '_Tuple2', _0: resultA, _1: resultB});
+					});
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['.>>.'] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$andThen);
+var _jvdvleuten$url_parser_combinator$UrlParser$follow = F2(
+	function (parserB, parserA) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+			parserA,
+			function (resultA) {
+				return A2(
+					_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+					parserB,
+					function (resultB) {
+						return _jvdvleuten$url_parser_combinator$UrlParser$return(resultA);
+					});
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['.>>'] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$follow);
+var _jvdvleuten$url_parser_combinator$UrlParser$append = F2(
+	function (parserA, parserB) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+			parserA,
+			function (resultA) {
+				return A2(
+					_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+					parserB,
+					function (resultB) {
+						return _jvdvleuten$url_parser_combinator$UrlParser$return(
+							A2(_elm_lang$core$Basics_ops['++'], resultA, resultB));
+					});
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$sequence = function (list) {
+	var _p9 = list;
+	if (_p9.ctor === '[]') {
+		return _jvdvleuten$url_parser_combinator$UrlParser$return(
+			{ctor: '[]'});
+	} else {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+			_p9._0,
+			function (resultHead) {
+				return A2(
+					_jvdvleuten$url_parser_combinator$UrlParser$append,
+					_jvdvleuten$url_parser_combinator$UrlParser$return(
+						{
+							ctor: '::',
+							_0: resultHead,
+							_1: {ctor: '[]'}
+						}),
+					_jvdvleuten$url_parser_combinator$UrlParser$sequence(_p9._1));
+			});
+	}
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$map = F2(
+	function (func, parser) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser$bind,
+			function (_p10) {
+				return _jvdvleuten$url_parser_combinator$UrlParser$return(
+					func(_p10));
+			},
+			parser);
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser$keep = F2(
+	function (parserB, parserA) {
+		return A2(
+			_jvdvleuten$url_parser_combinator$UrlParser$map,
+			function (_p11) {
+				var _p12 = _p11;
+				return _p12._1;
+			},
+			A2(_jvdvleuten$url_parser_combinator$UrlParser_ops['.>>.'], parserA, parserB));
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['>>.'] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$keep);
+var _jvdvleuten$url_parser_combinator$UrlParser$or = F2(
+	function (parserB, parserA) {
+		return _jvdvleuten$url_parser_combinator$UrlParser$Parser(
+			function (input) {
+				var _p13 = A2(_jvdvleuten$url_parser_combinator$UrlParser$parse, parserA, input);
+				if (_p13.ctor === '[]') {
+					var _p14 = A2(_jvdvleuten$url_parser_combinator$UrlParser$parse, parserB, input);
+					if (_p14.ctor === '[]') {
+						return {ctor: '[]'};
+					} else {
+						return _p14;
+					}
+				} else {
+					return _p13;
+				}
+			});
+	});
+var _jvdvleuten$url_parser_combinator$UrlParser_ops = _jvdvleuten$url_parser_combinator$UrlParser_ops || {};
+_jvdvleuten$url_parser_combinator$UrlParser_ops['<|>'] = _elm_lang$core$Basics$flip(_jvdvleuten$url_parser_combinator$UrlParser$or);
+var _jvdvleuten$url_parser_combinator$UrlParser$oneOf = function (list) {
+	var _p15 = list;
+	if (_p15.ctor === '[]') {
+		return _jvdvleuten$url_parser_combinator$UrlParser$fail;
+	} else {
+		return A3(
+			_elm_lang$core$List$foldl,
+			F2(
+				function (x, y) {
+					return A2(_jvdvleuten$url_parser_combinator$UrlParser_ops['<|>'], x, y);
+				}),
+			_p15._0,
+			_p15._1);
+	}
+};
+var _jvdvleuten$url_parser_combinator$UrlParser$many = function (parserA) {
+	return A2(
+		_jvdvleuten$url_parser_combinator$UrlParser_ops['>>='],
+		parserA,
+		function (resultA) {
+			return A2(
+				_jvdvleuten$url_parser_combinator$UrlParser$append,
+				_jvdvleuten$url_parser_combinator$UrlParser$return(
+					{
+						ctor: '::',
+						_0: resultA,
+						_1: {ctor: '[]'}
+					}),
+				A2(
+					_jvdvleuten$url_parser_combinator$UrlParser_ops['<|>'],
+					_jvdvleuten$url_parser_combinator$UrlParser$many(parserA),
+					_jvdvleuten$url_parser_combinator$UrlParser$return(
+						{ctor: '[]'})));
+		});
+};
 
 var _krisajenkins$remotedata$RemoteData$isNotAsked = function (data) {
 	var _p0 = data;
@@ -24407,6 +25197,10 @@ var _user$project$Stylesheet$stylesheet = _mdgriffith$style_elements$Style$style
 		}
 	});
 
+var _user$project$Models$AppState = F2(
+	function (a, b) {
+		return {testApi: a, currentUser: b};
+	});
 var _user$project$Models$TestApi = function (a) {
 	return {hello: a};
 };
@@ -24414,11 +25208,15 @@ var _user$project$Models$User = F3(
 	function (a, b, c) {
 		return {id: a, name: b, email: c};
 	});
-var _user$project$Models$NotFoundRoute = {ctor: 'NotFoundRoute'};
-var _user$project$Models$HomeRoute = {ctor: 'HomeRoute'};
 
-var _user$project$Msg$GraphqlMsg = function (a) {
-	return {ctor: 'GraphqlMsg', _0: a};
+var _user$project$Msg$TestApiRequest = function (a) {
+	return {ctor: 'TestApiRequest', _0: a};
+};
+var _user$project$Msg$UrlChange = function (a) {
+	return {ctor: 'UrlChange', _0: a};
+};
+var _user$project$Msg$NavigateTo = function (a) {
+	return {ctor: 'NavigateTo', _0: a};
 };
 var _user$project$Msg$NoOp = {ctor: 'NoOp'};
 
@@ -24429,10 +25227,7 @@ var _user$project$Graphql$baseQuery = function (query) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		'query{',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_chrisalmeida$graphqelm$GraphQElm$gql(query),
-			'}'));
+		A2(_elm_lang$core$Basics_ops['++'], query, '}'));
 };
 var _user$project$Graphql$baseRequest = F2(
 	function (body, decoder) {
@@ -24453,21 +25248,59 @@ var _user$project$Graphql$query = F2(
 		var requestQuery = _user$project$Graphql$baseQuery(query_);
 		return A2(
 			_elm_lang$http$Http$send,
-			_user$project$Msg$GraphqlMsg,
+			_user$project$Msg$TestApiRequest,
 			A2(_user$project$Graphql$baseRequest, requestQuery, requestDecoder));
 	});
 
-var _user$project$Queries$testApiQuery = {
-	resource: 'test',
-	fields: {
-		ctor: '::',
-		_0: 'hello',
-		_1: {ctor: '[]'}
-	},
-	args: {ctor: '[]'},
-	alias: ''
-};
+var _user$project$Queries$testApiQuery = _chrisalmeida$graphqelm$GraphQElm$gql(
+	{
+		resource: 'test',
+		fields: {
+			ctor: '::',
+			_0: 'hello',
+			_1: {ctor: '[]'}
+		},
+		args: {ctor: '[]'},
+		alias: ''
+	});
 
+var _user$project$Decoders$decodeCurrentUser = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+	{
+		ctor: '::',
+		_0: 'current_user',
+		_1: {
+			ctor: '::',
+			_0: 'email',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+		{
+			ctor: '::',
+			_0: 'current_user',
+			_1: {
+				ctor: '::',
+				_0: 'name',
+				_1: {ctor: '[]'}
+			}
+		},
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+			{
+				ctor: '::',
+				_0: 'current_user',
+				_1: {
+					ctor: '::',
+					_0: 'id',
+					_1: {ctor: '[]'}
+				}
+			},
+			_elm_lang$core$Json_Decode$int,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Models$User))));
 var _user$project$Decoders$decodeTestApi = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
 	{
@@ -24483,6 +25316,34 @@ var _user$project$Decoders$decodeTestApi = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Models$TestApi));
 
 var _user$project$Requests$testApiRequest = A2(_user$project$Graphql$query, _user$project$Queries$testApiQuery, _user$project$Decoders$decodeTestApi);
+
+var _user$project$Routing$paths = {
+	login: _jvdvleuten$url_parser_combinator$UrlParser$path('login')
+};
+var _user$project$Routing$onLinkClick = function (message) {
+	var options = {stopPropagation: false, preventDefault: true};
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'click',
+		options,
+		_elm_lang$core$Json_Decode$succeed(message));
+};
+var _user$project$Routing$NotFound = {ctor: 'NotFound'};
+var _user$project$Routing$Login = {ctor: 'Login'};
+var _user$project$Routing$Home = {ctor: 'Home'};
+var _user$project$Routing$routes = _jvdvleuten$url_parser_combinator$UrlParser$oneOf(
+	{
+		ctor: '::',
+		_0: _jvdvleuten$url_parser_combinator$UrlParser$return(_user$project$Routing$Home),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_jvdvleuten$url_parser_combinator$UrlParser$follow,
+				_user$project$Routing$paths.login,
+				_jvdvleuten$url_parser_combinator$UrlParser$return(_user$project$Routing$Login)),
+			_1: {ctor: '[]'}
+		}
+	});
 
 var _user$project$App$headerText = function (webData) {
 	var _p0 = webData;
@@ -24545,7 +25406,7 @@ var _user$project$App$view = function (model) {
 							_mdgriffith$style_elements$Element$el,
 							_user$project$Stylesheet$Banner,
 							{ctor: '[]'},
-							_user$project$App$headerText(model.testApiResult)),
+							_user$project$App$headerText(model.state.testApi)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -24632,36 +25493,64 @@ var _user$project$App$subscriptions = function (model) {
 var _user$project$App$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
-		if (_p1.ctor === 'GraphqlMsg') {
-			var webData = _krisajenkins$remotedata$RemoteData$fromResult(_p1._0);
-			var temp = _elm_lang$core$Debug$log(
-				_elm_lang$core$Basics$toString(webData));
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{testApiResult: webData}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		switch (_p1.ctor) {
+			case 'NavigateTo':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _elm_lang$navigation$Navigation$newUrl(_p1._0)
+				};
+			case 'UrlChange':
+				var newRoute = A2(_jvdvleuten$url_parser_combinator$UrlParser$parseLocation, _user$project$Routing$routes, _p1._0);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: newRoute}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'TestApiRequest':
+				var _p2 = _p1._0;
+				if (_p2.ctor === 'Ok') {
+					var temp = A2(_elm_lang$core$Debug$log, 'test-------', _p2._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$App$Model = function (a) {
-	return {testApiResult: a};
+var _user$project$App$initialModel = function (route) {
+	return {
+		state: {testApi: _krisajenkins$remotedata$RemoteData$Loading, currentUser: _krisajenkins$remotedata$RemoteData$Loading},
+		route: route
+	};
 };
-var _user$project$App$init = {
-	ctor: '_Tuple2',
-	_0: _user$project$App$Model(_krisajenkins$remotedata$RemoteData$Loading),
-	_1: _user$project$Requests$testApiRequest
+var _user$project$App$init = function (location) {
+	var currentRoute = A2(
+		_elm_lang$core$Debug$log,
+		'currentRoute-------',
+		A2(_jvdvleuten$url_parser_combinator$UrlParser$parseLocation, _user$project$Routing$routes, location));
+	return {
+		ctor: '_Tuple2',
+		_0: _user$project$App$initialModel(currentRoute),
+		_1: _user$project$Requests$testApiRequest
+	};
 };
-var _user$project$App$main = _elm_lang$html$Html$program(
+var _user$project$App$main = A2(
+	_elm_lang$navigation$Navigation$program,
+	_user$project$Msg$UrlChange,
 	{init: _user$project$App$init, update: _user$project$App$update, view: _user$project$App$view, subscriptions: _user$project$App$subscriptions})();
+var _user$project$App$Model = F2(
+	function (a, b) {
+		return {route: a, state: b};
+	});
 
 var Elm = {};
 Elm['App'] = Elm['App'] || {};
 if (typeof _user$project$App$main !== 'undefined') {
-    _user$project$App$main(Elm['App'], 'App', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Msg.Msg":{"args":["a"],"tags":{"GraphqlMsg":["Result.Result Http.Error Models.TestApi"],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Models.TestApi":{"args":[],"type":"{ hello : String }"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Msg.Msg a"},"versions":{"elm":"0.18.0"}});
+    _user$project$App$main(Elm['App'], 'App', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Msg.Msg":{"args":["a"],"tags":{"NavigateTo":["String"],"TestApiRequest":["Result.Result Http.Error a"],"UrlChange":["Navigation.Location"],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Msg.Msg { hello : String }"},"versions":{"elm":"0.18.0"}});
 }
 
 if (true)

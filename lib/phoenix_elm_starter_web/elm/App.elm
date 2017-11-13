@@ -1,42 +1,81 @@
 module App exposing (..)
 
+import Dict exposing (union)
 import Element exposing (..)
 import Element.Attributes exposing (..)
-import RemoteData exposing (WebData)
+import RemoteData exposing (WebData, fromResult)
+import Navigation
+import UrlParser exposing (parseLocation)
 import Stylesheet exposing (..)
 import Html exposing (Html)
-import Msg exposing (..)
-import Models exposing (User)
+import Msg exposing (Msg(..))
+import Models exposing (AppState)
 import Requests exposing (testApiRequest)
-import Models exposing (TestApi)
+import Routing exposing (Route, routes)
 
 
 -- import Queries exposing (userRequestCmd)
 
 
 type alias Model =
-    { testApiResult : WebData TestApi
+    { route : Maybe Route
+    , state : AppState
     }
 
 
-init : ( Model, Cmd (Msg a) )
-init =
-    ( (Model RemoteData.Loading), testApiRequest )
+initialModel : Maybe Route -> Model
+initialModel route =
+    { state =
+        { testApi = RemoteData.Loading
+        , currentUser = RemoteData.Loading
+        }
+    , route = route
+    }
+
+
+init location =
+    let
+        currentRoute =
+            parseLocation routes location
+                |> Debug.log "currentRoute-------"
+    in
+        ( initialModel currentRoute, testApiRequest )
 
 
 update : Msg a -> Model -> ( Model, Cmd (Msg a) )
 update msg model =
     case msg of
-        GraphqlMsg data ->
+        NavigateTo url ->
+            ( model, Navigation.newUrl url )
+
+        UrlChange location ->
             let
-                webData =
-                    RemoteData.fromResult data
-
-                temp =
-                    Debug.log (toString webData)
+                newRoute =
+                    parseLocation routes location
             in
-                ( { model | testApiResult = webData }, Cmd.none )
+                ( { model | route = newRoute }, Cmd.none )
 
+        TestApiRequest result ->
+            case result of
+                Ok requestType ->
+                    let
+                        temp =
+                            Debug.log "test-------" requestType
+                    in
+                        ( model, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
+        -- UserRequest result ->
+        --     let
+        --         currentState =
+        --             model.state
+        --
+        --         newState =
+        --             { currentState | currentUser = fromResult result }
+        --     in
+        --         ( { model | state = newState }, Cmd.none )
         NoOp ->
             ( model, Cmd.none )
 
@@ -52,7 +91,7 @@ view model =
             [ height fill, width fill ]
             [ row None
                 [ height fill, width fill, center, verticalCenter ]
-                [ el Banner [] (headerText model.testApiResult) ]
+                [ el Banner [] (headerText model.state.testApi) ]
             , row Callouts
                 [ spacing 10 ]
                 [ column Callout
@@ -83,9 +122,8 @@ headerText webData =
             text ("Error:" ++ toString err)
 
 
-main : Program Never Model (Msg a)
 main =
-    Html.program
+    Navigation.program UrlChange
         { init = init
         , update = update
         , view = view

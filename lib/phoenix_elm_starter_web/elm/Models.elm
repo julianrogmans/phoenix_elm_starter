@@ -1,9 +1,12 @@
 module Models exposing (..)
 
+import RemoteData exposing (WebData)
 
-type Route
-    = HomeRoute
-    | NotFoundRoute
+
+type alias AppState =
+    { testApi : WebData TestApi
+    , currentUser : WebData User
+    }
 
 
 type alias TestApi =
