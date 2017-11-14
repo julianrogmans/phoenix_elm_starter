@@ -2,11 +2,16 @@ module Msg exposing (..)
 
 import Navigation
 import Http exposing (Error)
-import Models exposing (User, TestApi)
+import Models exposing (UserModel, TestApiModel)
 
 
-type Msg a
+type Msg
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | TestApiRequest (Result Error a)
+    | GraphqlRequest GraphqlResult
+
+
+type GraphqlResult
+    = TestApi (Result Error TestApiModel)
+    | User (Result Error UserModel)

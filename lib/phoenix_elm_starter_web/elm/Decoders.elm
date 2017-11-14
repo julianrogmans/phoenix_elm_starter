@@ -2,16 +2,16 @@ module Decoders exposing (..)
 
 import Json.Decode exposing (string, int)
 import Json.Decode.Pipeline exposing (requiredAt, decode)
-import Models exposing (TestApi, User)
+import Models exposing (TestApiModel, UserModel)
 
 
 decodeTestApi =
-    decode TestApi
+    decode TestApiModel
         |> requiredAt [ "test", "hello" ] string
 
 
 decodeCurrentUser =
-    decode User
+    decode UserModel
         |> requiredAt [ "current_user", "id" ] int
         |> requiredAt [ "current_user", "name" ] string
         |> requiredAt [ "current_user", "email" ] string

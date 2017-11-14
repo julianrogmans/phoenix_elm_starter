@@ -4,16 +4,16 @@ import RemoteData exposing (WebData)
 
 
 type alias AppState =
-    { testApi : WebData TestApi
-    , currentUser : WebData User
+    { testApi : WebData TestApiModel
+    , currentUser : WebData UserModel
     }
 
 
-type alias TestApi =
+type alias TestApiModel =
     { hello : String }
 
 
-type alias User =
+type alias UserModel =
     { id : Int
     , name : String
     , email : String

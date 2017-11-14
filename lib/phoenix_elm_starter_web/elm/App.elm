@@ -8,9 +8,9 @@ import Navigation
 import UrlParser exposing (parseLocation)
 import Stylesheet exposing (..)
 import Html exposing (Html)
-import Msg exposing (Msg(..))
+import Msg exposing (Msg(..), GraphqlResult(..))
 import Models exposing (AppState)
-import Requests exposing (testApiRequest)
+import Requests exposing (graphqlRequest)
 import Routing exposing (Route, routes)
 
 
@@ -39,7 +39,7 @@ init location =
             parseLocation routes location
                 |> Debug.log "currentRoute-------"
     in
-        ( initialModel currentRoute, testApiRequest )
+        ( initialModel currentRoute, graphqlRequest TestApi )
 
 
 update : Msg a -> Model -> ( Model, Cmd (Msg a) )
@@ -55,27 +55,13 @@ update msg model =
             in
                 ( { model | route = newRoute }, Cmd.none )
 
-        TestApiRequest result ->
-            case result of
-                Ok requestType ->
-                    let
-                        temp =
-                            Debug.log "test-------" requestType
-                    in
-                        ( model, Cmd.none )
+        TestApi result ->
+            let
+                log =
+                    Debug.log "result --------------" result
+            in
+                ( model, Cmd.none )
 
-                Err _ ->
-                    ( model, Cmd.none )
-
-        -- UserRequest result ->
-        --     let
-        --         currentState =
-        --             model.state
-        --
-        --         newState =
-        --             { currentState | currentUser = fromResult result }
-        --     in
-        --         ( { model | state = newState }, Cmd.none )
         NoOp ->
             ( model, Cmd.none )
 
