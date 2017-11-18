@@ -1,6 +1,5 @@
 module App exposing (..)
 
-import Dict exposing (union)
 import Element exposing (viewport, text)
 import Navigation
 import RemoteData exposing (WebData)

@@ -1,12 +1,12 @@
 module Update exposing (update)
 
-import RemoteData exposing (fromResult)
 import Navigation
-import UrlParser exposing (parseLocation)
+import UrlParser
 import Types exposing (Msg(..), Model)
 import Routing exposing (routes)
 import Login.View as LoginView
 import Graphql.Requests exposing (routeRequest)
+import Graphql.Schema as Schema
 
 
 update msg model =
@@ -17,30 +17,12 @@ update msg model =
         UrlChange location ->
             let
                 newRoute =
-                    parseLocation routes location
+                    UrlParser.parseLocation routes location
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
         GraphqlResponse result ->
-            case fromResult result of
-                RemoteData.NotAsked ->
-                    ( model, Cmd.none )
-
-                RemoteData.Loading ->
-                    ( { model | loading = True }, Cmd.none )
-
-                RemoteData.Failure err ->
-                    ( { model | error = Just (toString err) }, Cmd.none )
-
-                RemoteData.Success data ->
-                    let
-                        log =
-                            Debug.log "Data: " data
-                    in
-                        -- This is where I want to pattern match against what
-                        -- type of record/decoder/data was returned so I know where
-                        -- to put it in the model
-                        ( model, Cmd.none )
+            Schema.resolve model result
 
         Login message ->
             let

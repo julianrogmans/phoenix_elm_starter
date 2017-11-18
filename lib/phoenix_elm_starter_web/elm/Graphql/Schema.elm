@@ -1,8 +1,9 @@
-module Graphql.Schema exposing (query)
+module Graphql.Schema exposing (query, resolve)
 
 import Http
+import RemoteData exposing (fromResult)
 import Json.Decode
-import Types exposing (Msg(GraphqlResponse))
+import Types exposing (Msg(GraphqlResponse), GraphqlResult(..))
 import Graphql.Utils exposing (createRequest, createQuery, createDecoder)
 import Graphql.Queries exposing (..)
 import Graphql.Decoders exposing (..)
@@ -12,7 +13,12 @@ type alias Query =
     String
 
 
-query : Query -> Json.Decode.Decoder model -> Cmd (Msg model)
-query query decoder =
+query query decoder result =
     createRequest (createQuery query) (createDecoder decoder)
-        |> Http.send GraphqlResponse
+        |> Http.send result
+
+
+resolve model result_ =
+    case result_ of
+        UserResult result ->
+            ( { model | currentUser = fromResult result }, Cmd.none )

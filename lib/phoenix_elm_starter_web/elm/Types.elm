@@ -28,4 +28,8 @@ type Msg a
     | NavigateTo String
     | UrlChange Navigation.Location
     | Login Login.Msg
-    | GraphqlResponse (Result Error a)
+    | GraphqlResponse GraphqlResult
+
+
+type GraphqlResult
+    = UserResult (Result Error User)
