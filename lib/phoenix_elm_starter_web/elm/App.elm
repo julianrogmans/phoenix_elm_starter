@@ -1,34 +1,24 @@
 module App exposing (..)
 
 import Dict exposing (union)
-import Element exposing (..)
-import Element.Attributes exposing (..)
-import RemoteData exposing (WebData, fromResult)
+import Element exposing (viewport, text)
 import Navigation
+import RemoteData exposing (WebData)
 import UrlParser exposing (parseLocation)
-import Stylesheet exposing (..)
-import Html exposing (Html)
-import Msg exposing (Msg(..))
-import Models exposing (AppState)
-import Requests exposing (testApiRequest)
-import Routing exposing (Route, routes)
-
-
--- import Queries exposing (userRequestCmd)
-
-
-type alias Model =
-    { route : Maybe Route
-    , state : AppState
-    }
+import Styles exposing (stylesheet)
+import Types exposing (Msg(..), Model, User)
+import Routing as R exposing (Route, routes)
+import Graphql.Requests exposing (routeRequest)
+import Update exposing (update)
+import Login.View as LoginView
 
 
 initialModel : Maybe Route -> Model
 initialModel route =
-    { state =
-        { testApi = RemoteData.Loading
-        , currentUser = RemoteData.Loading
-        }
+    { login = LoginView.initialModel
+    , currentUser = RemoteData.NotAsked
+    , loading = False
+    , error = Nothing
     , route = route
     }
 
@@ -37,89 +27,28 @@ init location =
     let
         currentRoute =
             parseLocation routes location
-                |> Debug.log "currentRoute-------"
     in
-        ( initialModel currentRoute, testApiRequest )
+        ( initialModel currentRoute, routeRequest currentRoute )
 
 
-update : Msg a -> Model -> ( Model, Cmd (Msg a) )
-update msg model =
-    case msg of
-        NavigateTo url ->
-            ( model, Navigation.newUrl url )
-
-        UrlChange location ->
-            let
-                newRoute =
-                    parseLocation routes location
-            in
-                ( { model | route = newRoute }, Cmd.none )
-
-        TestApiRequest result ->
-            case result of
-                Ok requestType ->
-                    let
-                        temp =
-                            Debug.log "test-------" requestType
-                    in
-                        ( model, Cmd.none )
-
-                Err _ ->
-                    ( model, Cmd.none )
-
-        -- UserRequest result ->
-        --     let
-        --         currentState =
-        --             model.state
-        --
-        --         newState =
-        --             { currentState | currentUser = fromResult result }
-        --     in
-        --         ( { model | state = newState }, Cmd.none )
-        NoOp ->
-            ( model, Cmd.none )
-
-
-subscriptions : Model -> Sub (Msg a)
 subscriptions model =
     Sub.none
 
 
 view model =
-    viewport Stylesheet.stylesheet <|
-        column None
-            [ height fill, width fill ]
-            [ row None
-                [ height fill, width fill, center, verticalCenter ]
-                [ el Banner [] (headerText model.state.testApi) ]
-            , row Callouts
-                [ spacing 10 ]
-                [ column Callout
-                    [ width fill, height (px 300) ]
-                    [ empty ]
-                , column Callout
-                    [ width fill, height (px 300) ]
-                    [ empty ]
-                , column Callout
-                    [ width fill, height (px 300) ]
-                    [ empty ]
-                ]
-            ]
+    viewport stylesheet <|
+        case model.route of
+            Just (R.Home) ->
+                text <| toString model.error
 
+            -- Element.html <|
+            --     HomeView.layout model.home
+            Just (R.Login) ->
+                Element.html <|
+                    LoginView.layout model.login
 
-headerText webData =
-    case webData of
-        RemoteData.NotAsked ->
-            text "Start"
-
-        RemoteData.Loading ->
-            text "Phoenix Starter loading..."
-
-        RemoteData.Success data ->
-            text data.hello
-
-        RemoteData.Failure err ->
-            text ("Error:" ++ toString err)
+            _ ->
+                text "404 Not Found"
 
 
 main =

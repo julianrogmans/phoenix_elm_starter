@@ -1,16 +1,11 @@
-module Decoders exposing (..)
+module Graphql.Decoders exposing (..)
 
 import Json.Decode exposing (string, int)
 import Json.Decode.Pipeline exposing (requiredAt, decode)
-import Models exposing (TestApi, User)
+import Types exposing (User)
 
 
-decodeTestApi =
-    decode TestApi
-        |> requiredAt [ "test", "hello" ] string
-
-
-decodeCurrentUser =
+userDecoder =
     decode User
         |> requiredAt [ "current_user", "id" ] int
         |> requiredAt [ "current_user", "name" ] string

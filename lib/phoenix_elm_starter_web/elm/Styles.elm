@@ -1,4 +1,4 @@
-module Stylesheet exposing (..)
+module Styles exposing (..)
 
 import Color exposing (rgba)
 import Style exposing (..)
@@ -6,11 +6,8 @@ import Style.Font as Font
 import Style.Color as Color
 
 
-type Styles
+type Selectors
     = None
-    | Banner
-    | Callouts
-    | Callout
 
 
 colors =
@@ -21,9 +18,4 @@ colors =
 stylesheet =
     Style.styleSheet
         [ style None []
-        , style Banner
-            [ Font.size 72
-            ]
-        , style Callout
-            [ Color.background colors.primaryColor ]
         ]
