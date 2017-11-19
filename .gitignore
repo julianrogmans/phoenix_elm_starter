@@ -3,6 +3,7 @@
 /elm-stuff
 /db
 /deps
+/priv
 /*.ez
 
 # Generated on crash by the VM
