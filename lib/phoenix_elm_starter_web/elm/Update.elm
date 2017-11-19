@@ -2,11 +2,14 @@ module Update exposing (update)
 
 import Navigation
 import UrlParser
-import Types exposing (Msg(..), Model)
+import RemoteData exposing (RemoteData(..))
+import Types exposing (Message(..), Model)
 import Routing exposing (routes)
 import Login.View as LoginView
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema as Schema
+import Graphql.Queries exposing (userQuery)
+import Graphql.Decoders exposing (userDecoder)
 
 
 update msg model =
@@ -21,8 +24,11 @@ update msg model =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        GraphqlResponse result ->
-            Schema.resolve model result
+        GetUserQuery ->
+            ( { model | currentUser = Loading }, Schema.query UserResponse userQuery userDecoder )
+
+        UserResponse user ->
+            ( { model | currentUser = user }, Cmd.none )
 
         Login message ->
             let

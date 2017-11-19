@@ -2,10 +2,10 @@ module App exposing (..)
 
 import Element exposing (viewport, text)
 import Navigation
-import RemoteData exposing (WebData)
+import RemoteData exposing (RemoteData(..), WebData)
 import UrlParser exposing (parseLocation)
 import Styles exposing (stylesheet)
-import Types exposing (Msg(..), Model, User)
+import Types exposing (Message(..), Model, User)
 import Routing as R exposing (Route, routes)
 import Graphql.Requests exposing (routeRequest)
 import Update exposing (update)
@@ -15,7 +15,7 @@ import Login.View as LoginView
 initialModel : Maybe Route -> Model
 initialModel route =
     { login = LoginView.initialModel
-    , currentUser = RemoteData.NotAsked
+    , currentUser = NotAsked
     , loading = False
     , error = Nothing
     , route = route

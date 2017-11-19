@@ -23,13 +23,10 @@ type alias User =
     }
 
 
-type Msg a
+type Message
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | Login Login.Msg
-    | GraphqlResponse GraphqlResult
-
-
-type GraphqlResult
-    = UserResult (Result Error User)
+    | Login Login.Message
+    | GetUserQuery
+    | UserResponse (WebData User)

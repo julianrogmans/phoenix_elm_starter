@@ -1,17 +1,17 @@
 module Graphql.Requests exposing (..)
 
 import Graphql.Schema exposing (query)
-import Types exposing (Msg)
+import Types exposing (Message)
 import Routing exposing (Route(..))
 import Graphql.Decoders exposing (..)
 import Graphql.Queries exposing (..)
-import Types exposing (GraphqlResult(UserResult))
+import Types exposing (Message(UserResponse))
 
 
 routeRequest route =
     case route of
         Just Home ->
-            query userQuery userDecoder UserResult
+            query UserResponse userQuery userDecoder
 
         _ ->
             Cmd.none

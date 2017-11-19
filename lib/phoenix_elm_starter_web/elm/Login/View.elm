@@ -11,7 +11,7 @@ type alias Model =
     }
 
 
-type Msg
+type Message
     = EmailInputChange String
     | PasswordInputChange String
 
