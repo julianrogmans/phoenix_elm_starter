@@ -1,12 +1,20 @@
 module Graphql.Decoders exposing (..)
 
-import Json.Decode exposing (string, int)
-import Json.Decode.Pipeline exposing (requiredAt, decode)
-import Types exposing (User)
+import Json.Decode exposing (string, int, nullable)
+import Json.Decode.Pipeline exposing (required, optional, decode)
+import Types exposing (Member, Session)
 
 
-userDecoder =
-    decode User
-        |> requiredAt [ "current_user", "id" ] int
-        |> requiredAt [ "current_user", "name" ] string
-        |> requiredAt [ "current_user", "email" ] string
+memberDecoder =
+    decode Member
+        |> required "id" int
+        |> required "first_name" string
+        |> required "last_name" string
+        |> required "email" string
+        |> optional "last_sign_in" (nullable string) Nothing
+
+
+sessionDecoder =
+    decode Session
+        |> required "current_resource" memberDecoder
+        |> required "token" string

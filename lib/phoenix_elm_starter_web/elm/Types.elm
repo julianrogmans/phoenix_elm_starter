@@ -3,30 +3,37 @@ module Types exposing (..)
 import Navigation
 import RemoteData exposing (WebData)
 import Http exposing (Error)
-import Login.View as Login
+import Login.Types as Login
 import Routing exposing (Route)
 
 
 type alias Model =
     { route : Maybe Route
-    , currentUser : WebData User
-    , loading : Bool
+    , session : WebData Session
+    , authenticated : Bool
     , error : Maybe String
     , login : Login.Model
     }
 
 
-type alias User =
+type alias Member =
     { id : Int
-    , name : String
+    , firstName : String
+    , lastName : String
     , email : String
+    , lastSignIn : Maybe String
     }
 
 
-type Message
+type alias Session =
+    { currentResource : Member
+    , token : String
+    }
+
+
+type Message subMsg
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | Login Login.Message
-    | GetUserQuery
-    | UserResponse (WebData User)
+    | LoginMsg subMsg
+    | SignInMemberResponse (WebData Session)

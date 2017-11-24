@@ -5,8 +5,7 @@ import RemoteData exposing (WebData, fromResult)
 import RemoteData.Http as R
 import Json.Decode
 import Json.Encode exposing (string)
-import Types exposing (Message(UserResponse))
-import Graphql.Utils exposing (createDecoder, createQuery)
+import Graphql.Utils exposing (createDecoder, createQuery, requestConfig)
 import Graphql.Queries exposing (..)
 import Graphql.Decoders exposing (..)
 
@@ -18,9 +17,9 @@ type alias Query =
 query response query_ decoder_ =
     let
         decoder =
-            createDecoder decoder_
+            createDecoder decoder_ query_
 
         query =
             createQuery query_
     in
-        R.post "/graphql" response decoder query
+        R.postWithConfig requestConfig "/graphql" response decoder query

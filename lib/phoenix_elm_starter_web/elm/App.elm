@@ -1,11 +1,12 @@
 module App exposing (..)
 
+import Html
 import Element exposing (viewport, text)
 import Navigation
 import RemoteData exposing (RemoteData(..), WebData)
 import UrlParser exposing (parseLocation)
 import Styles exposing (stylesheet)
-import Types exposing (Message(..), Model, User)
+import Types exposing (Message(..), Model, Member)
 import Routing as R exposing (Route, routes)
 import Graphql.Requests exposing (routeRequest)
 import Update exposing (update)
@@ -15,8 +16,8 @@ import Login.View as LoginView
 initialModel : Maybe Route -> Model
 initialModel route =
     { login = LoginView.initialModel
-    , currentUser = NotAsked
-    , loading = False
+    , authenticated = False
+    , session = NotAsked
     , error = Nothing
     , route = route
     }
@@ -44,7 +45,7 @@ view model =
             --     HomeView.layout model.home
             Just (R.Login) ->
                 Element.html <|
-                    LoginView.layout model.login
+                    Html.map LoginMsg (LoginView.layout model.login)
 
             _ ->
                 text "404 Not Found"

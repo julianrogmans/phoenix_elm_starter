@@ -8,8 +8,6 @@ import Routing exposing (routes)
 import Login.View as LoginView
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema as Schema
-import Graphql.Queries exposing (userQuery)
-import Graphql.Decoders exposing (userDecoder)
 
 
 update msg model =
@@ -24,13 +22,7 @@ update msg model =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        GetUserQuery ->
-            ( { model | currentUser = Loading }, Schema.query UserResponse userQuery userDecoder )
-
-        UserResponse user ->
-            ( { model | currentUser = user }, Cmd.none )
-
-        Login message ->
+        LoginMsg message ->
             let
                 ( loginModel, loginCmd ) =
                     LoginView.update message model.login
