@@ -4,35 +4,37 @@ import Html exposing (div, input, text, button)
 import Html.Attributes exposing (type_, placeholder, value, name)
 import Html.Events exposing (onClick, onInput)
 import Element exposing (row, html)
-import Graphql.Schema exposing (query)
-import Types exposing (Message(SignInMemberResponse))
-import Login.Types exposing (Message(..), Model)
-import Login.Styles as Style exposing (Selectors(..))
+import RemoteData exposing (RemoteData(..))
+import Graphql.Schema as Schema
 import Graphql.Queries exposing (sessionQuery)
-import Graphql.Decoders exposing (sessionDecoder)
+import Types exposing (Message(SignInMember))
+import Login.Types exposing (Message(..))
+import Login.Styles as Style exposing (Selectors(..))
 
 
 initialModel =
-    { email = ""
-    , password = ""
-    , submitting = False
+    { email = "rogmansj@gmail.com"
+    , password = "Julain"
     }
 
 
-signIn model =
-    query SignInMemberResponse (sessionQuery model) sessionDecoder
-
-
 update msg model =
-    case msg of
-        EmailInputChange value ->
-            ( { model | email = value }, Cmd.none )
+    let
+        login =
+            model.login
 
-        PasswordInputChange value ->
-            ( { model | password = value }, Cmd.none )
+        session =
+            model.session
+    in
+        case msg of
+            EmailInputChange value ->
+                ( { model | login = { login | email = value } }, Cmd.none )
 
-        SignInMember ->
-            ( { model | submitting = True }, signIn model )
+            PasswordInputChange value ->
+                ( { model | login = { login | password = value } }, Cmd.none )
+
+            SignIn ->
+                ( { model | session = { session | data = Loading } }, Schema.query SignInMember session (sessionQuery login) )
 
 
 layout model =
@@ -56,7 +58,7 @@ layout model =
                         ]
                         []
                     , button
-                        [ onClick SignInMember ]
+                        [ onClick SignIn ]
                         [ text "Sign In" ]
                     ]
             ]

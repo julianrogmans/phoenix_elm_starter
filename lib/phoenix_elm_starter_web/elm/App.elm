@@ -11,13 +11,19 @@ import Routing as R exposing (Route, routes)
 import Graphql.Requests exposing (routeRequest)
 import Update exposing (update)
 import Login.View as LoginView
+import Graphql.Queries exposing (sessionQuery)
+import Graphql.Decoders exposing (sessionDecoder)
+import Graphql.Utils exposing (createDecoder, createQuery)
 
 
 initialModel : Maybe Route -> Model
 initialModel route =
     { login = LoginView.initialModel
     , authenticated = False
-    , session = NotAsked
+    , session =
+        { data = NotAsked
+        , decoder = createDecoder sessionDecoder
+        }
     , error = Nothing
     , route = route
     }

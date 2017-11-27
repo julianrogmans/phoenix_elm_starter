@@ -24,10 +24,17 @@ update msg model =
 
         LoginMsg message ->
             let
-                ( loginModel, loginCmd ) =
-                    LoginView.update message model.login
+                ( newModel, loginCmd ) =
+                    LoginView.update message model
             in
-                ( { model | login = loginModel }, loginCmd )
+                ( newModel, loginCmd )
+
+        SignInMember data ->
+            let
+                session =
+                    model.session
+            in
+                ( { model | session = { session | data = data } }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

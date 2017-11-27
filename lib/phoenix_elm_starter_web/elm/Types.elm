@@ -1,18 +1,26 @@
 module Types exposing (..)
 
+import Http exposing (Error)
+import Json.Decode as Decode
 import Navigation
 import RemoteData exposing (WebData)
-import Http exposing (Error)
+import GraphQElm exposing (Query)
 import Login.Types as Login
 import Routing exposing (Route)
 
 
 type alias Model =
     { route : Maybe Route
-    , session : WebData Session
+    , session : GraphqlData Session
     , authenticated : Bool
     , error : Maybe String
     , login : Login.Model
+    }
+
+
+type alias GraphqlData model =
+    { data : WebData model
+    , decoder : Query -> Decode.Decoder model
     }
 
 
@@ -36,4 +44,4 @@ type Message subMsg
     | NavigateTo String
     | UrlChange Navigation.Location
     | LoginMsg subMsg
-    | SignInMemberResponse (WebData Session)
+    | SignInMember (WebData Session)

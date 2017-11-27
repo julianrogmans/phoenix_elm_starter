@@ -1,6 +1,5 @@
 module Graphql.Requests exposing (..)
 
-import Graphql.Schema exposing (query)
 import Types exposing (Message)
 import Routing exposing (Route(..))
 import Graphql.Decoders exposing (..)

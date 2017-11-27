@@ -10,16 +10,17 @@ import Graphql.Queries exposing (..)
 import Graphql.Decoders exposing (..)
 
 
-type alias Query =
-    String
-
-
-query response query_ decoder_ =
+query response model query_ =
     let
         decoder =
-            createDecoder decoder_ query_
+            model.decoder query_
 
         query =
             createQuery query_
     in
-        R.postWithConfig requestConfig "/graphql" response decoder query
+        R.postWithConfig
+            requestConfig
+            "/graphql"
+            response
+            decoder
+            query
