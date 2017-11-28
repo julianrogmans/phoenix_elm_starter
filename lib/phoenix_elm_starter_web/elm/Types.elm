@@ -44,4 +44,4 @@ type Actions subMsg
     | NavigateTo String
     | UrlChange Navigation.Location
     | LoginMsg subMsg
-    | SignInMember (WebData Session)
+    | SignInMember (Result Error Session)

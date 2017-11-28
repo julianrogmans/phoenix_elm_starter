@@ -2,7 +2,7 @@ module Update exposing (update)
 
 import Navigation
 import UrlParser
-import RemoteData exposing (RemoteData(..))
+import RemoteData exposing (RemoteData(..), fromResult)
 import Types exposing (Actions(..), State)
 import Routing exposing (routes)
 import Login.View as LoginView
@@ -34,7 +34,14 @@ update msg model =
                 session =
                     model.session
             in
-                ( { model | session = { session | data = data } }, Cmd.none )
+                ( { model
+                    | session =
+                        { session
+                            | data = fromResult data
+                        }
+                  }
+                , Cmd.none
+                )
 
         _ ->
             ( model, Cmd.none )

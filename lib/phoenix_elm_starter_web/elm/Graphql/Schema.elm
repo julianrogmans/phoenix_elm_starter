@@ -1,13 +1,14 @@
 module Graphql.Schema exposing (query)
 
-import RemoteData exposing (WebData, fromResult)
+import Http
+import RemoteData exposing (WebData)
 import RemoteData.Http exposing (postWithConfig)
 import GraphQElm exposing (Query)
-import Graphql.Utils exposing (createDecoder, createQuery, requestConfig)
+import Graphql.Utils exposing (createDecoder, createQuery, createRequest)
 import Types exposing (GraphqlData)
 
 
-query : (WebData model -> msg) -> GraphqlData model -> Query -> Cmd msg
+query : (Result Http.Error model -> msg) -> GraphqlData model -> Query -> Cmd msg
 query response model query_ =
     let
         decoder =
@@ -16,9 +17,5 @@ query response model query_ =
         query =
             createQuery query_
     in
-        postWithConfig
-            requestConfig
-            "/graphql"
-            response
-            decoder
-            query
+        Http.send response <|
+            createRequest query decoder

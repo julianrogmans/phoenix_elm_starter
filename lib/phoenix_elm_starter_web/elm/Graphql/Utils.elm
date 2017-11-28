@@ -1,23 +1,27 @@
 module Graphql.Utils exposing (..)
 
-import Http
+import Http exposing (stringBody, expectJson)
 import RemoteData.Http exposing (Config)
 import GraphQElm exposing (gql, Query)
 import Json.Encode as Encode
 import Json.Decode as Decode exposing (Decoder)
 
 
-requestConfig : Config
-requestConfig =
-    { headers = [ Http.header "Content-Type" "application/graphql" ]
-    , withCredentials = True
-    , timeout = Nothing
-    }
+createRequest query decoder =
+    Http.request
+        { method = "POST"
+        , headers = []
+        , url = "/graphql"
+        , body = stringBody "application/graphql" query
+        , expect = expectJson decoder
+        , timeout = Nothing
+        , withCredentials = False
+        }
 
 
-createQuery : Query -> Encode.Value
+createQuery : Query -> String
 createQuery query =
-    Encode.string ("query { " ++ gql query ++ " }")
+    "query { " ++ gql query ++ " }"
 
 
 createDecoder : Decoder model -> Query -> Decoder model
