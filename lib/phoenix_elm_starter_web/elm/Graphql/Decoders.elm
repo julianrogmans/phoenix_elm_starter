@@ -16,5 +16,5 @@ memberDecoder =
 
 sessionDecoder =
     decode Session
-        |> required "current_resource" memberDecoder
+        |> required "member" memberDecoder
         |> required "token" string

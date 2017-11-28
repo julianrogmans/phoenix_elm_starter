@@ -1,13 +1,13 @@
 module Login.Types exposing (..)
 
 
-type alias Model =
+type alias State =
     { email : String
     , password : String
     }
 
 
-type Message
+type Actions
     = EmailInputChange String
     | PasswordInputChange String
     | SignIn

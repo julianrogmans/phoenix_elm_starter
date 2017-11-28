@@ -8,8 +8,8 @@ defmodule PhoenixElmStarterWeb.Schema.Types do
     field :last_sign_in, :string
   end
 
-  object :member_signin do
-    field :member, :member
+  object :session do
+    field :id, :integer
     field :token, :string
   end
 end

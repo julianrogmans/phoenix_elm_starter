@@ -1,21 +1,13 @@
 module Graphql.Queries exposing (..)
 
-import GraphQElm exposing (Query, gql)
+import GraphQElm exposing (Query)
+import Login.Types as Login
 
 
--- userQuery : String
--- userQuery =
---     gql
---         { resource = "users"
---         , fields = [ "id", "name", "email" ]
---         , args = []
---         , alias = ""
---         }
-
-
+sessionQuery : Login.State -> Query
 sessionQuery data =
-    { resource = "member_signin"
-    , fields = [ "member", "jwt" ]
+    { resource = "signin"
+    , fields = [ "id", "token" ]
     , args = [ ( "email", data.email ), ( "password", data.password ) ]
-    , alias = "MemberSignin"
+    , alias = ""
     }

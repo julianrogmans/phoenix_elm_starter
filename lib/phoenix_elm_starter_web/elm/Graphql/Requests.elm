@@ -1,11 +1,9 @@
 module Graphql.Requests exposing (..)
 
-import Types exposing (Message)
 import Routing exposing (Route(..))
-import Graphql.Decoders exposing (..)
-import Graphql.Queries exposing (..)
 
 
+routeRequest : Maybe Route -> Cmd msg
 routeRequest route =
     case route of
         Just Home ->

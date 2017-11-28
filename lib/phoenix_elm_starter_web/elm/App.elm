@@ -1,24 +1,23 @@
 module App exposing (..)
 
-import Html
+import Html exposing (Html)
 import Element exposing (viewport, text)
 import Navigation
 import RemoteData exposing (RemoteData(..), WebData)
 import UrlParser exposing (parseLocation)
-import Styles exposing (stylesheet)
-import Types exposing (Message(..), Model, Member)
+import Styles exposing (stylesheet, Selectors(..))
+import Types exposing (Actions(..), State, Member)
 import Routing as R exposing (Route, routes)
 import Graphql.Requests exposing (routeRequest)
 import Update exposing (update)
 import Login.View as LoginView
-import Graphql.Queries exposing (sessionQuery)
 import Graphql.Decoders exposing (sessionDecoder)
-import Graphql.Utils exposing (createDecoder, createQuery)
+import Graphql.Utils exposing (createDecoder)
 
 
-initialModel : Maybe Route -> Model
-initialModel route =
-    { login = LoginView.initialModel
+initialState : Maybe Route -> State
+initialState route =
+    { login = LoginView.initialState
     , authenticated = False
     , session =
         { data = NotAsked
@@ -29,32 +28,49 @@ initialModel route =
     }
 
 
+init : Navigation.Location -> ( State, Cmd msg )
 init location =
     let
         currentRoute =
             parseLocation routes location
     in
-        ( initialModel currentRoute, routeRequest currentRoute )
+        ( initialState currentRoute, routeRequest currentRoute )
 
 
-subscriptions model =
+subscriptions : a -> Sub msg
+subscriptions state =
     Sub.none
 
 
-view model =
+view state =
     viewport stylesheet <|
-        case model.route of
-            Just (R.Home) ->
-                text <| toString model.error
+        Element.row None
+            []
+            [ case state.route of
+                Just (R.Home) ->
+                    text <| toString state.error
 
-            -- Element.html <|
-            --     HomeView.layout model.home
-            Just (R.Login) ->
-                Element.html <|
-                    Html.map LoginMsg (LoginView.layout model.login)
+                -- Element.html <|
+                --     HomeView.layout state.home
+                Just (R.Login) ->
+                    Element.html <|
+                        Html.map LoginMsg (LoginView.layout state.login)
 
-            _ ->
-                text "404 Not Found"
+                _ ->
+                    text "404 Not Found"
+            , case state.session.data of
+                NotAsked ->
+                    Element.empty
+
+                Loading ->
+                    Element.empty
+
+                Success _ ->
+                    Element.empty
+
+                Failure error ->
+                    Element.text (toString error)
+            ]
 
 
 main =

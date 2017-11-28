@@ -25394,11 +25394,11 @@ var _user$project$Styles$stylesheet = _mdgriffith$style_elements$Style$styleShee
 		_1: {ctor: '[]'}
 	});
 
-var _user$project$Login_Types$Model = F3(
-	function (a, b, c) {
-		return {email: a, password: b, submitting: c};
+var _user$project$Login_Types$State = F2(
+	function (a, b) {
+		return {email: a, password: b};
 	});
-var _user$project$Login_Types$SignInMember = {ctor: 'SignInMember'};
+var _user$project$Login_Types$SignIn = {ctor: 'SignIn'};
 var _user$project$Login_Types$PasswordInputChange = function (a) {
 	return {ctor: 'PasswordInputChange', _0: a};
 };
@@ -25434,9 +25434,13 @@ var _user$project$Routing$routes = _jvdvleuten$url_parser_combinator$UrlParser$o
 		}
 	});
 
-var _user$project$Types$Model = F5(
+var _user$project$Types$State = F5(
 	function (a, b, c, d, e) {
 		return {route: a, session: b, authenticated: c, error: d, login: e};
+	});
+var _user$project$Types$GraphqlData = F2(
+	function (a, b) {
+		return {data: a, decoder: b};
 	});
 var _user$project$Types$Member = F5(
 	function (a, b, c, d, e) {
@@ -25446,8 +25450,8 @@ var _user$project$Types$Session = F2(
 	function (a, b) {
 		return {currentResource: a, token: b};
 	});
-var _user$project$Types$SignInMemberResponse = function (a) {
-	return {ctor: 'SignInMemberResponse', _0: a};
+var _user$project$Types$SignInMember = function (a) {
+	return {ctor: 'SignInMember', _0: a};
 };
 var _user$project$Types$LoginMsg = function (a) {
 	return {ctor: 'LoginMsg', _0: a};
@@ -25460,8 +25464,18 @@ var _user$project$Types$NavigateTo = function (a) {
 };
 var _user$project$Types$NoOp = {ctor: 'NoOp'};
 
+var _user$project$Graphql_Requests$routeRequest = function (route) {
+	var _p0 = route;
+	if ((_p0.ctor === 'Just') && (_p0._0.ctor === 'Home')) {
+		return _elm_lang$core$Platform_Cmd$none;
+	} else {
+		return _elm_lang$core$Platform_Cmd$none;
+	}
+};
+
 var _user$project$Graphql_Utils$createDecoder = F2(
-	function (decoder, query) {
+	function (decoder, _p0) {
+		var _p1 = _p0;
 		return A2(
 			_elm_lang$core$Json_Decode$at,
 			{
@@ -25469,7 +25483,7 @@ var _user$project$Graphql_Utils$createDecoder = F2(
 				_0: 'data',
 				_1: {
 					ctor: '::',
-					_0: query.resource,
+					_0: _p1.resource,
 					_1: {ctor: '[]'}
 				}
 			},
@@ -25479,11 +25493,11 @@ var _user$project$Graphql_Utils$createQuery = function (query) {
 	return _elm_lang$core$Json_Encode$string(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			'query{',
+			'query { ',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				_chrisalmeida$graphqelm$GraphQElm$gql(query),
-				'}')));
+				' }')));
 };
 var _user$project$Graphql_Utils$requestConfig = {
 	headers: {
@@ -25495,15 +25509,22 @@ var _user$project$Graphql_Utils$requestConfig = {
 	timeout: _elm_lang$core$Maybe$Nothing
 };
 
+var _user$project$Graphql_Schema$query = F3(
+	function (response, model, query_) {
+		var query = _user$project$Graphql_Utils$createQuery(query_);
+		var decoder = model.decoder(query_);
+		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, _user$project$Graphql_Utils$requestConfig, '/graphql', response, decoder, query);
+	});
+
 var _user$project$Graphql_Queries$sessionQuery = function (data) {
 	return {
-		resource: 'member_signin',
+		resource: 'signin',
 		fields: {
 			ctor: '::',
-			_0: 'member',
+			_0: 'id',
 			_1: {
 				ctor: '::',
-				_0: 'jwt',
+				_0: 'token',
 				_1: {ctor: '[]'}
 			}
 		},
@@ -25516,56 +25537,8 @@ var _user$project$Graphql_Queries$sessionQuery = function (data) {
 				_1: {ctor: '[]'}
 			}
 		},
-		alias: 'MemberSignin'
+		alias: ''
 	};
-};
-
-var _user$project$Graphql_Decoders$memberDecoder = A4(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
-	'last_sign_in',
-	_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$string),
-	_elm_lang$core$Maybe$Nothing,
-	A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'email',
-		_elm_lang$core$Json_Decode$string,
-		A3(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-			'last_name',
-			_elm_lang$core$Json_Decode$string,
-			A3(
-				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-				'first_name',
-				_elm_lang$core$Json_Decode$string,
-				A3(
-					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-					'id',
-					_elm_lang$core$Json_Decode$int,
-					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Types$Member))))));
-var _user$project$Graphql_Decoders$sessionDecoder = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'token',
-	_elm_lang$core$Json_Decode$string,
-	A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'current_resource',
-		_user$project$Graphql_Decoders$memberDecoder,
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Types$Session)));
-
-var _user$project$Graphql_Schema$query = F3(
-	function (response, query_, decoder_) {
-		var query = _user$project$Graphql_Utils$createQuery(query_);
-		var decoder = A2(_user$project$Graphql_Utils$createDecoder, decoder_, query_);
-		return A5(_ohanhi$remotedata_http$RemoteData_Http$postWithConfig, _user$project$Graphql_Utils$requestConfig, '/graphql', response, decoder, query);
-	});
-
-var _user$project$Graphql_Requests$routeRequest = function (route) {
-	var _p0 = route;
-	if ((_p0.ctor === 'Just') && (_p0._0.ctor === 'Home')) {
-		return _elm_lang$core$Platform_Cmd$none;
-	} else {
-		return _elm_lang$core$Platform_Cmd$none;
-	}
 };
 
 var _user$project$Login_Styles$FormInput = {ctor: 'FormInput'};
@@ -25646,7 +25619,7 @@ var _user$project$Login_View$layout = function (model) {
 										_elm_lang$html$Html$button,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(_user$project$Login_Types$SignInMember),
+											_0: _elm_lang$html$Html_Events$onClick(_user$project$Login_Types$SignIn),
 											_1: {ctor: '[]'}
 										},
 										{
@@ -25661,15 +25634,10 @@ var _user$project$Login_View$layout = function (model) {
 				_1: {ctor: '[]'}
 			}));
 };
-var _user$project$Login_View$signIn = function (model) {
-	return A3(
-		_user$project$Graphql_Schema$query,
-		_user$project$Types$SignInMemberResponse,
-		_user$project$Graphql_Queries$sessionQuery(model),
-		_user$project$Graphql_Decoders$sessionDecoder);
-};
 var _user$project$Login_View$update = F2(
 	function (msg, model) {
+		var session = model.session;
+		var login = model.login;
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'EmailInputChange':
@@ -25677,7 +25645,11 @@ var _user$project$Login_View$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{email: _p0._0}),
+						{
+							login: _elm_lang$core$Native_Utils.update(
+								login,
+								{email: _p0._0})
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PasswordInputChange':
@@ -25685,7 +25657,11 @@ var _user$project$Login_View$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{password: _p0._0}),
+						{
+							login: _elm_lang$core$Native_Utils.update(
+								login,
+								{password: _p0._0})
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
@@ -25693,12 +25669,20 @@ var _user$project$Login_View$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{submitting: true}),
-					_1: _user$project$Login_View$signIn(model)
+						{
+							session: _elm_lang$core$Native_Utils.update(
+								session,
+								{data: _krisajenkins$remotedata$RemoteData$Loading})
+						}),
+					_1: A3(
+						_user$project$Graphql_Schema$query,
+						_user$project$Types$SignInMember,
+						session,
+						_user$project$Graphql_Queries$sessionQuery(login))
 				};
 		}
 	});
-var _user$project$Login_View$initialModel = {email: '', password: '', submitting: false};
+var _user$project$Login_View$initialState = {email: 'rogmansj@gmail.com', password: 'Julain'};
 
 var _user$project$Update$update = F2(
 	function (msg, model) {
@@ -25720,61 +25704,134 @@ var _user$project$Update$update = F2(
 					_1: _user$project$Graphql_Requests$routeRequest(newRoute)
 				};
 			case 'LoginMsg':
-				var _p1 = A2(_user$project$Login_View$update, _p0._0, model.login);
-				var loginModel = _p1._0;
+				var _p1 = A2(_user$project$Login_View$update, _p0._0, model);
+				var newState = _p1._0;
 				var loginCmd = _p1._1;
+				return {ctor: '_Tuple2', _0: newState, _1: loginCmd};
+			case 'SignInMember':
+				var session = model.session;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{login: loginModel}),
-					_1: loginCmd
+						{
+							session: _elm_lang$core$Native_Utils.update(
+								session,
+								{data: _p0._0})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 
-var _user$project$App$view = function (model) {
+var _user$project$Graphql_Decoders$memberDecoder = A4(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+	'last_sign_in',
+	_elm_lang$core$Json_Decode$nullable(_elm_lang$core$Json_Decode$string),
+	_elm_lang$core$Maybe$Nothing,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'email',
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'last_name',
+			_elm_lang$core$Json_Decode$string,
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+				'first_name',
+				_elm_lang$core$Json_Decode$string,
+				A3(
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+					'id',
+					_elm_lang$core$Json_Decode$int,
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Types$Member))))));
+var _user$project$Graphql_Decoders$sessionDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'token',
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'member',
+		_user$project$Graphql_Decoders$memberDecoder,
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Types$Session)));
+
+var _user$project$App$view = function (state) {
 	return A2(
 		_mdgriffith$style_elements$Element$viewport,
 		_user$project$Styles$stylesheet,
-		function () {
-			var _p0 = model.route;
-			_v0_2:
-			do {
-				if (_p0.ctor === 'Just') {
-					switch (_p0._0.ctor) {
-						case 'Home':
-							return _mdgriffith$style_elements$Element$text(
-								_elm_lang$core$Basics$toString(model.error));
-						case 'Login':
-							return _mdgriffith$style_elements$Element$html(
-								A2(
-									_elm_lang$html$Html$map,
-									_user$project$Types$LoginMsg,
-									_user$project$Login_View$layout(model.login)));
-						default:
+		A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$Styles$None,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: function () {
+					var _p0 = state.route;
+					_v0_2:
+					do {
+						if (_p0.ctor === 'Just') {
+							switch (_p0._0.ctor) {
+								case 'Home':
+									return _mdgriffith$style_elements$Element$text(
+										_elm_lang$core$Basics$toString(state.error));
+								case 'Login':
+									return _mdgriffith$style_elements$Element$html(
+										A2(
+											_elm_lang$html$Html$map,
+											_user$project$Types$LoginMsg,
+											_user$project$Login_View$layout(state.login)));
+								default:
+									break _v0_2;
+							}
+						} else {
 							break _v0_2;
-					}
-				} else {
-					break _v0_2;
+						}
+					} while(false);
+					return _mdgriffith$style_elements$Element$text('404 Not Found');
+				}(),
+				_1: {
+					ctor: '::',
+					_0: function () {
+						var _p1 = state.session.data;
+						switch (_p1.ctor) {
+							case 'NotAsked':
+								return _mdgriffith$style_elements$Element$empty;
+							case 'Loading':
+								return _mdgriffith$style_elements$Element$empty;
+							case 'Success':
+								return _mdgriffith$style_elements$Element$empty;
+							default:
+								return _mdgriffith$style_elements$Element$text(
+									_elm_lang$core$Basics$toString(_p1._0));
+						}
+					}(),
+					_1: {ctor: '[]'}
 				}
-			} while(false);
-			return _mdgriffith$style_elements$Element$text('404 Not Found');
-		}());
+			}));
 };
-var _user$project$App$subscriptions = function (model) {
+var _user$project$App$subscriptions = function (state) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$App$initialModel = function (route) {
-	return {login: _user$project$Login_View$initialModel, authenticated: false, session: _krisajenkins$remotedata$RemoteData$NotAsked, error: _elm_lang$core$Maybe$Nothing, route: route};
+var _user$project$App$initialState = function (route) {
+	return {
+		login: _user$project$Login_View$initialState,
+		authenticated: false,
+		session: {
+			data: _krisajenkins$remotedata$RemoteData$NotAsked,
+			decoder: _user$project$Graphql_Utils$createDecoder(_user$project$Graphql_Decoders$sessionDecoder)
+		},
+		error: _elm_lang$core$Maybe$Nothing,
+		route: route
+	};
 };
 var _user$project$App$init = function (location) {
 	var currentRoute = A2(_jvdvleuten$url_parser_combinator$UrlParser$parseLocation, _user$project$Routing$routes, location);
 	return {
 		ctor: '_Tuple2',
-		_0: _user$project$App$initialModel(currentRoute),
+		_0: _user$project$App$initialState(currentRoute),
 		_1: _user$project$Graphql_Requests$routeRequest(currentRoute)
 	};
 };
@@ -25786,7 +25843,7 @@ var _user$project$App$main = A2(
 var Elm = {};
 Elm['App'] = Elm['App'] || {};
 if (typeof _user$project$App$main !== 'undefined') {
-    _user$project$App$main(Elm['App'], 'App', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Login.Types.Message":{"args":[],"tags":{"EmailInputChange":["String"],"PasswordInputChange":["String"],"SignInMember":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"RemoteData.RemoteData":{"args":["e","a"],"tags":{"NotAsked":[],"Success":["a"],"Loading":[],"Failure":["e"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Types.Message":{"args":["subMsg"],"tags":{"LoginMsg":["subMsg"],"NavigateTo":["String"],"SignInMemberResponse":["RemoteData.WebData Types.Session"],"UrlChange":["Navigation.Location"],"NoOp":[]}}},"aliases":{"RemoteData.WebData":{"args":["a"],"type":"RemoteData.RemoteData Http.Error a"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Member":{"args":[],"type":"{ id : Int , firstName : String , lastName : String , email : String , lastSignIn : Maybe.Maybe String }"},"Types.Session":{"args":[],"type":"{ currentResource : Types.Member, token : String }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Types.Message Login.Types.Message"},"versions":{"elm":"0.18.0"}});
+    _user$project$App$main(Elm['App'], 'App', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"RemoteData.RemoteData":{"args":["e","a"],"tags":{"NotAsked":[],"Success":["a"],"Loading":[],"Failure":["e"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Login.Types.Actions":{"args":[],"tags":{"EmailInputChange":["String"],"SignIn":[],"PasswordInputChange":["String"]}},"Types.Actions":{"args":["subMsg"],"tags":{"LoginMsg":["subMsg"],"NavigateTo":["String"],"SignInMember":["RemoteData.WebData Types.Session"],"UrlChange":["Navigation.Location"],"NoOp":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}}},"aliases":{"RemoteData.WebData":{"args":["a"],"type":"RemoteData.RemoteData Http.Error a"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Types.Member":{"args":[],"type":"{ id : Int , firstName : String , lastName : String , email : String , lastSignIn : Maybe.Maybe String }"},"Types.Session":{"args":[],"type":"{ currentResource : Types.Member, token : String }"},"Navigation.Location":{"args":[],"type":"{ href : String , host : String , hostname : String , protocol : String , origin : String , port_ : String , pathname : String , search : String , hash : String , username : String , password : String }"}},"message":"Types.Actions Login.Types.Actions"},"versions":{"elm":"0.18.0"}});
 }
 
 if (true)

@@ -3,7 +3,7 @@ module Update exposing (update)
 import Navigation
 import UrlParser
 import RemoteData exposing (RemoteData(..))
-import Types exposing (Message(..), Model)
+import Types exposing (Actions(..), State)
 import Routing exposing (routes)
 import Login.View as LoginView
 import Graphql.Requests exposing (routeRequest)
@@ -24,10 +24,10 @@ update msg model =
 
         LoginMsg message ->
             let
-                ( newModel, loginCmd ) =
+                ( newState, loginCmd ) =
                     LoginView.update message model
             in
-                ( newModel, loginCmd )
+                ( newState, loginCmd )
 
         SignInMember data ->
             let

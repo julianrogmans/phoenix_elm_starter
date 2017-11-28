@@ -7,12 +7,12 @@ import Element exposing (row, html)
 import RemoteData exposing (RemoteData(..))
 import Graphql.Schema as Schema
 import Graphql.Queries exposing (sessionQuery)
-import Types exposing (Message(SignInMember))
-import Login.Types exposing (Message(..))
+import Types exposing (Actions(SignInMember))
+import Login.Types exposing (Actions(..))
 import Login.Styles as Style exposing (Selectors(..))
 
 
-initialModel =
+initialState =
     { email = "rogmansj@gmail.com"
     , password = "Julain"
     }

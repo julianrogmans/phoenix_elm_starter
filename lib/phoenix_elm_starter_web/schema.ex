@@ -8,9 +8,9 @@ defmodule PhoenixElmStarterWeb.Schema do
     #   resolve &MemberResolver.current_member/3
     # end
 
-    field :member_signin, :member_signin do
-      arg :email, :string
-      arg :password, :string
+    field :signin, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
       resolve &MemberResolver.sign_in/3
     end
   end

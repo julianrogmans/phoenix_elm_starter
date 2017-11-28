@@ -9,12 +9,12 @@ import Login.Types as Login
 import Routing exposing (Route)
 
 
-type alias Model =
+type alias State =
     { route : Maybe Route
     , session : GraphqlData Session
     , authenticated : Bool
     , error : Maybe String
-    , login : Login.Model
+    , login : Login.State
     }
 
 
@@ -39,7 +39,7 @@ type alias Session =
     }
 
 
-type Message subMsg
+type Actions subMsg
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
