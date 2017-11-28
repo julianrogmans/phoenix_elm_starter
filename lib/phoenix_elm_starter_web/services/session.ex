@@ -1,9 +1,8 @@
 defmodule PhoenixElmStarterWeb.Session do
-  alias PhoenixElmStarterWeb.Accounts
-  alias PhoenixElmStarterWeb.Accounts.Member
+  alias PhoenixElmStarter.Accounts
 
-  def authenticate(%{"email" => e, "password" => p}) do
-    case Accounts.find_member(Member, email: e) do
+  def authenticate(%{email: e, password: p}) do
+    case Accounts.find_member(%{email: e}) do
       nil ->
         :error
       account ->
