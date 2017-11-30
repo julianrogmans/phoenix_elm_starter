@@ -15,14 +15,9 @@ import Authentication.Register as Register
 initialState : Maybe Routing.Route -> Types.State
 initialState route =
     { login = Login.initialState
+    , members = NotAsked
+    , session = NotAsked
     , register = Register.initialState
-    , authenticated = False
-    , loading = False
-    , session =
-        { data = NotAsked
-        , decoder = createDecoder sessionDecoder
-        }
-    , error = Nothing
     , route = route
     }
 

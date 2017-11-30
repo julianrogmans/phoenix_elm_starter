@@ -1,28 +1,20 @@
 module Types exposing (..)
 
-import Http exposing (Error)
 import Json.Decode as Decode
 import Navigation
 import RemoteData exposing (WebData, RemoteData(Failure))
 import GraphQElm exposing (Query)
+import Graphql.Types exposing (GraphqlType)
 import Authentication.Types exposing (LoginState, RegisterState)
 import Routing exposing (Route)
 
 
 type alias State =
-    { route : Maybe Route
-    , session : GraphqlData Session
-    , authenticated : Bool
-    , loading : Bool
-    , error : Maybe Error
-    , login : LoginState
+    { login : LoginState
+    , members : WebData (List Member)
+    , session : WebData Session
     , register : RegisterState
-    }
-
-
-type alias GraphqlData model =
-    { data : WebData model
-    , decoder : Query -> Decode.Decoder model
+    , route : Maybe Route
     }
 
 
@@ -41,10 +33,10 @@ type alias Session =
     }
 
 
-type Actions subMsg
+type Actions message error success
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | Authentication subMsg
-    | Authenticate (Result Error Session)
+    | Authentication message
+    | Graphql GraphqlType (Result error success)
     | Logout

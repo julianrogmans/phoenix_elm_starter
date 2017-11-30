@@ -1,34 +1,18 @@
 module Graphql.Schema exposing (query, mutate)
 
-import Http
-import RemoteData exposing (WebData)
-import RemoteData.Http exposing (postWithConfig)
-import GraphQElm exposing (Query)
-import Graphql.Utils exposing (createDecoder, createQuery, createMutation, createRequest)
-import Types exposing (GraphqlData)
+import GraphQL.Request.Builder exposing (..)
+import Types exposing (Session, Member)
 
 
-query : (Result Http.Error model -> msg) -> GraphqlData model -> Query -> Cmd msg
-query response model query_ =
-    let
-        decoder =
-            model.decoder query_
-
-        query =
-            createQuery query_
-    in
-        Http.send response <|
-            createRequest query decoder
+member =
+    object Member
+        |> with (field "id" [] id)
+        |> with (field "firstName" [] string)
+        |> with (field "lastName" [] string)
+        |> with (field "email" [] string)
 
 
-mutate : (Result Http.Error model -> msg) -> GraphqlData model -> Query -> Cmd msg
-mutate response model mutation_ =
-    let
-        decoder =
-            model.decoder mutation_
-
-        mutation =
-            createMutation mutation_
-    in
-        Http.send response <|
-            createRequest mutation decoder
+session =
+    object Session
+        |> with (field "member" [] member)
+        |> with (field "token" [] string)

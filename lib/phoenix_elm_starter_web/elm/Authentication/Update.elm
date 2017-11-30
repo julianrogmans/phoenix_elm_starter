@@ -1,9 +1,10 @@
 module Authentication.Update exposing (..)
 
+import GraphQL.Client.Http exposing (sendQuery, sendMutation)
 import RemoteData exposing (RemoteData(..))
-import Graphql.Schema as Schema
-import Graphql.Queries exposing (sessionQuery, registerMutation)
-import Types exposing (Actions(Authenticate))
+import Types exposing (Actions(Graphql))
+import Graphql.Types exposing (GraphqlType(Session))
+import Graphql.Mutations as Mutation
 import Authentication.Types exposing (Actions(..))
 
 
@@ -26,11 +27,7 @@ update msg model =
                 ( { model | login = { login | password = value } }, Cmd.none )
 
             SignIn ->
-                ( { model
-                    | session = { session | data = Loading }
-                  }
-                , Schema.query Authenticate session (sessionQuery login)
-                )
+                ( model, Cmd.none )
 
             RegisterFirstName value ->
                 ( { model | register = { register | firstName = value } }
@@ -58,6 +55,7 @@ update msg model =
                 )
 
             Register ->
-                ( { model | session = { session | data = Loading } }
-                , Schema.mutate Authenticate session (registerMutation register)
+                ( { model | session = Loading }
+                , Task.attempt (Graphql Session) <|
+                    sendMutation "/graphql" (Mutation.register register)
                 )

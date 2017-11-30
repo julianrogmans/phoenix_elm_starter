@@ -30,30 +30,6 @@ update msg model =
             in
                 ( newState, authenticationCmd )
 
-        Authenticate data ->
-            let
-                session =
-                    model.session
-
-                result =
-                    fromResult data
-
-                newModel =
-                    { model | session = { session | data = result } }
-            in
-                case result of
-                    NotAsked ->
-                        ( model, Cmd.none )
-
-                    Loading ->
-                        ( { model | session = { session | data = Loading } }, Cmd.none )
-
-                    Failure error ->
-                        ( newModel, Cmd.none )
-
-                    Success _ ->
-                        ( newModel, Navigation.newUrl "/" )
-
         Logout ->
             ( Config.initialState Nothing, Cmd.none )
 
