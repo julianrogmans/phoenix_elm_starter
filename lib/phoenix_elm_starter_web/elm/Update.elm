@@ -5,7 +5,8 @@ import UrlParser
 import RemoteData exposing (RemoteData(..), fromResult)
 import Types exposing (Actions(..), State)
 import Routing exposing (routes)
-import Login.View as LoginView
+import Config
+import Authentication.Update as Authentication
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema as Schema
 
@@ -22,26 +23,39 @@ update msg model =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        LoginMsg message ->
+        Authentication message ->
             let
-                ( newState, loginCmd ) =
-                    LoginView.update message model
+                ( newState, authenticationCmd ) =
+                    Authentication.update message model
             in
-                ( newState, loginCmd )
+                ( newState, authenticationCmd )
 
-        SignInMember data ->
+        Authenticate data ->
             let
                 session =
                     model.session
+
+                result =
+                    fromResult data
+
+                newModel =
+                    { model | session = { session | data = result } }
             in
-                ( { model
-                    | session =
-                        { session
-                            | data = fromResult data
-                        }
-                  }
-                , Cmd.none
-                )
+                case result of
+                    NotAsked ->
+                        ( model, Cmd.none )
+
+                    Loading ->
+                        ( { model | session = { session | data = Loading } }, Cmd.none )
+
+                    Failure error ->
+                        ( newModel, Cmd.none )
+
+                    Success _ ->
+                        ( newModel, Navigation.newUrl "/" )
+
+        Logout ->
+            ( Config.initialState Nothing, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

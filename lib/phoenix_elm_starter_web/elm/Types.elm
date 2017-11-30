@@ -3,9 +3,9 @@ module Types exposing (..)
 import Http exposing (Error)
 import Json.Decode as Decode
 import Navigation
-import RemoteData exposing (WebData)
+import RemoteData exposing (WebData, RemoteData(Failure))
 import GraphQElm exposing (Query)
-import Login.Types as Login
+import Authentication.Types exposing (LoginState, RegisterState)
 import Routing exposing (Route)
 
 
@@ -13,8 +13,10 @@ type alias State =
     { route : Maybe Route
     , session : GraphqlData Session
     , authenticated : Bool
-    , error : Maybe String
-    , login : Login.State
+    , loading : Bool
+    , error : Maybe Error
+    , login : LoginState
+    , register : RegisterState
     }
 
 
@@ -25,7 +27,7 @@ type alias GraphqlData model =
 
 
 type alias Member =
-    { id : Int
+    { id : String
     , firstName : String
     , lastName : String
     , email : String
@@ -34,7 +36,7 @@ type alias Member =
 
 
 type alias Session =
-    { currentResource : Member
+    { member : Member
     , token : String
     }
 
@@ -43,5 +45,6 @@ type Actions subMsg
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | LoginMsg subMsg
-    | SignInMember (Result Error Session)
+    | Authentication subMsg
+    | Authenticate (Result Error Session)
+    | Logout

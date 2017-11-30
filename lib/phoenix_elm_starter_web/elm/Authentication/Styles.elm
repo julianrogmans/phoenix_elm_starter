@@ -1,4 +1,4 @@
-module Login.Styles exposing (..)
+module Authentication.Styles exposing (..)
 
 import Color exposing (rgba)
 import Style exposing (..)

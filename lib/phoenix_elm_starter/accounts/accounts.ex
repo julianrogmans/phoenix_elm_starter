@@ -21,6 +21,8 @@ defmodule PhoenixElmStarter.Accounts do
     Repo.all(Member)
   end
 
+  def get_member!(id), do: Repo.get!(Member, id)
+
   @doc """
   Gets a single member.
 
@@ -51,7 +53,7 @@ defmodule PhoenixElmStarter.Accounts do
   """
   def create_member(attrs \\ %{}) do
     %Member{}
-    |> Member.changeset(attrs)
+    |> Member.register_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,7 +71,7 @@ defmodule PhoenixElmStarter.Accounts do
   """
   def update_member(%Member{} = member, attrs) do
     member
-    |> Member.changeset(attrs)
+    |> Member.register_changeset(attrs)
     |> Repo.update()
   end
 
@@ -99,6 +101,6 @@ defmodule PhoenixElmStarter.Accounts do
 
   """
   def change_member(%Member{} = member) do
-    Member.changeset(member, %{})
+    Member.register_changeset(member, %{})
   end
 end

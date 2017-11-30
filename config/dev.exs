@@ -32,8 +32,6 @@ config :phoenix_elm_starter, PhoenixElmStarterWeb.Endpoint,
 config :phoenix_elm_starter, PhoenixElmStarterWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
       ~r{lib/phoenix_elm_starter_web/views/.*(ex)$},
       ~r{lib/phoenix_elm_starter_web/templates/.*(eex)$}
     ]

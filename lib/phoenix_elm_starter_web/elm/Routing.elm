@@ -10,6 +10,7 @@ import UrlParser exposing (return, apply, follow, path, apply, oneOf)
 type Route
     = Home
     | Login
+    | Register
     | NotFound
 
 
@@ -17,6 +18,7 @@ routes =
     oneOf
         [ return Home
         , return Login |> follow paths.login
+        , return Register |> follow paths.register
         ]
 
 
@@ -32,4 +34,6 @@ onLinkClick message =
 
 
 paths =
-    { login = path "login" }
+    { login = path "login"
+    , register = path "signup"
+    }

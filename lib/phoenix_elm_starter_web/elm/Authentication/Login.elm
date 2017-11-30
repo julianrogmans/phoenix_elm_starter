@@ -1,40 +1,17 @@
-module Login.View exposing (..)
+module Authentication.Login exposing (..)
 
 import Html exposing (div, input, text, button)
 import Html.Attributes exposing (type_, placeholder, value, name)
 import Html.Events exposing (onClick, onInput)
 import Element exposing (row, html)
-import RemoteData exposing (RemoteData(..))
-import Graphql.Schema as Schema
-import Graphql.Queries exposing (sessionQuery)
-import Types exposing (Actions(SignInMember))
-import Login.Types exposing (Actions(..))
-import Login.Styles as Style exposing (Selectors(..))
+import Authentication.Types exposing (Actions(..))
+import Authentication.Styles as Style exposing (Selectors(..))
 
 
 initialState =
     { email = "rogmansj@gmail.com"
     , password = "Julain"
     }
-
-
-update msg model =
-    let
-        login =
-            model.login
-
-        session =
-            model.session
-    in
-        case msg of
-            EmailInputChange value ->
-                ( { model | login = { login | email = value } }, Cmd.none )
-
-            PasswordInputChange value ->
-                ( { model | login = { login | password = value } }, Cmd.none )
-
-            SignIn ->
-                ( { model | session = { session | data = Loading } }, Schema.query SignInMember session (sessionQuery login) )
 
 
 layout model =
@@ -47,14 +24,14 @@ layout model =
                         [ type_ "text"
                         , value model.email
                         , name "Email"
-                        , onInput EmailInputChange
+                        , onInput LoginEmail
                         ]
                         []
                     , input
                         [ type_ "password"
                         , value model.password
                         , name "Password"
-                        , onInput PasswordInputChange
+                        , onInput LoginPassword
                         ]
                         []
                     , button

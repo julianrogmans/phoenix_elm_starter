@@ -7,7 +7,7 @@ import Types exposing (Member, Session)
 
 memberDecoder =
     decode Member
-        |> required "id" int
+        |> required "id" string
         |> required "first_name" string
         |> required "last_name" string
         |> required "email" string

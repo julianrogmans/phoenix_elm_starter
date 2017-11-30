@@ -2,39 +2,15 @@ module App exposing (..)
 
 import Html exposing (Html)
 import Element exposing (viewport, text)
+import Element.Events as Events
 import Navigation
-import RemoteData exposing (RemoteData(..), WebData)
-import UrlParser exposing (parseLocation)
+import Routing as Route
 import Styles exposing (stylesheet, Selectors(..))
 import Types exposing (Actions(..), State, Member)
-import Routing as R exposing (Route, routes)
-import Graphql.Requests exposing (routeRequest)
 import Update exposing (update)
-import Login.View as LoginView
-import Graphql.Decoders exposing (sessionDecoder)
-import Graphql.Utils exposing (createDecoder)
-
-
-initialState : Maybe Route -> State
-initialState route =
-    { login = LoginView.initialState
-    , authenticated = False
-    , session =
-        { data = NotAsked
-        , decoder = createDecoder sessionDecoder
-        }
-    , error = Nothing
-    , route = route
-    }
-
-
-init : Navigation.Location -> ( State, Cmd msg )
-init location =
-    let
-        currentRoute =
-            parseLocation routes location
-    in
-        ( initialState currentRoute, routeRequest currentRoute )
+import Config exposing (init)
+import Authentication.Login as LoginView
+import Authentication.Register as RegisterView
 
 
 subscriptions : a -> Sub msg
@@ -46,30 +22,28 @@ view state =
     viewport stylesheet <|
         Element.row None
             []
-            [ case state.route of
-                Just (R.Home) ->
-                    text <| toString state.error
+            [ Element.button None [ Events.onClick Logout ] (text "Log Out")
+            , case state.route of
+                Just route ->
+                    case route of
+                        Route.Home ->
+                            text "HomeView"
 
-                -- Element.html <|
-                --     HomeView.layout state.home
-                Just (R.Login) ->
-                    Element.html <|
-                        Html.map LoginMsg (LoginView.layout state.login)
+                        -- Element.html <|
+                        --     HomeView.layout state.home
+                        Route.Login ->
+                            Element.html <|
+                                Html.map Authentication (LoginView.layout state.login)
 
-                _ ->
-                    text "404 Not Found"
-            , case state.session.data of
-                NotAsked ->
-                    Element.empty
+                        Route.Register ->
+                            Element.html <|
+                                Html.map Authentication (RegisterView.layout state.register)
 
-                Loading ->
-                    Element.empty
+                        Route.NotFound ->
+                            text "404 Not Found"
 
-                Success _ ->
-                    Element.empty
-
-                Failure error ->
-                    Element.text (toString error)
+                Nothing ->
+                    text "Nothing"
             ]
 
 
