@@ -9,6 +9,7 @@ import Config
 import Authentication.Update as Authentication
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema as Schema
+import Graphql.Types exposing (resolve)
 
 
 update msg model =
@@ -29,6 +30,10 @@ update msg model =
                     Authentication.update message model
             in
                 ( newState, authenticationCmd )
+
+        Graphql message result ->
+            resolve model message <|
+                fromResult result
 
         Logout ->
             ( Config.initialState Nothing, Cmd.none )

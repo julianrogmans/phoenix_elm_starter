@@ -1,5 +1,7 @@
 module Authentication.Update exposing (..)
 
+import Task
+import GraphQL.Request.Builder exposing (request)
 import GraphQL.Client.Http exposing (sendQuery, sendMutation)
 import RemoteData exposing (RemoteData(..))
 import Types exposing (Actions(Graphql))
@@ -57,5 +59,7 @@ update msg model =
             Register ->
                 ( { model | session = Loading }
                 , Task.attempt (Graphql Session) <|
-                    sendMutation "/graphql" (Mutation.register register)
+                    sendMutation "/graphql" <|
+                        request register <|
+                            Mutation.register
                 )

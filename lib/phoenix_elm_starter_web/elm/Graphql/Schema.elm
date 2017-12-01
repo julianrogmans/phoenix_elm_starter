@@ -1,4 +1,4 @@
-module Graphql.Schema exposing (query, mutate)
+module Graphql.Schema exposing (..)
 
 import GraphQL.Request.Builder exposing (..)
 import Types exposing (Session, Member)
@@ -10,6 +10,7 @@ member =
         |> with (field "firstName" [] string)
         |> with (field "lastName" [] string)
         |> with (field "email" [] string)
+        |> with (field "lastSignIn" [] (nullable string))
 
 
 session =

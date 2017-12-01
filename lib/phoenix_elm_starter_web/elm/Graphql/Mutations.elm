@@ -9,7 +9,7 @@ import Graphql.Schema exposing (session)
 -- register  Types.RegisterState -> Task
 
 
-register formData =
+register =
     let
         firstName =
             Var.required "firstName" .firstName Var.string
@@ -27,11 +27,11 @@ register formData =
             Var.required "passwordConfirmation" .passwordConfirmation Var.string
 
         arguments =
-            [ ( "firstName", firstName )
-            , ( "lastName", lastName )
-            , ( "email", email )
-            , ( "password", password )
-            , ( "passwordConfirmation", passwordConfirmation )
+            [ ( "firstName", Arg.variable firstName )
+            , ( "lastName", Arg.variable lastName )
+            , ( "email", Arg.variable email )
+            , ( "password", Arg.variable password )
+            , ( "passwordConfirmation", Arg.variable passwordConfirmation )
             ]
     in
         Build.mutationDocument <|
