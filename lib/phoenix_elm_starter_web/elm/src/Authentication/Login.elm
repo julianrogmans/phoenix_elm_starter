@@ -1,14 +1,15 @@
 module Authentication.Login exposing (..)
 
 import List
-import Html exposing (div, button)
 import Element as Page
-import Form exposing (Form, Msg(Submit))
+import Element.Attributes as Add exposing (fill, px)
+import Element.Events as Event
 import Form.Validate as V exposing (andMap)
-import Form.Input as Input
-import Form.Input.Extra as Input
+import Form.Input exposing (passwordInput)
+import Form.Input.Extra exposing (emailInput, stringField)
 import Authentication.Types exposing (Actions(..), LoginFormState)
-import Styles exposing (Selectors(..))
+import Authentication.Form exposing (renderInput, submitButton)
+import Styles as S
 
 
 validate =
@@ -18,20 +19,21 @@ validate =
 
 
 layout login =
-    Page.row None
-        []
-        [ Page.map LoginForm <|
-            render_form login
+    Page.column S.Login
+        [ Add.width fill ]
+        [ Page.h1 S.None [ Add.center, Add.padding 10 ] <| Page.text "Login"
+        , Page.map LoginForm <| renderForm login
+        , Page.map LoginForm <| submitButton "Login"
         ]
 
 
-render_form login =
+renderForm login =
     let
-        field =
-            flip Form.getFieldAsString login
-    in
-        Page.wrappedRow None
-            []
-            [ Page.html <| flip Input.emailInput [] <| field "email"
-            , Page.html <| flip Input.passwordInput [] <| field "password"
+        fields =
+            [ ( "email", emailInput )
+            , ( "password", passwordInput )
             ]
+    in
+        Page.column S.None
+            [ Add.width fill ]
+            (List.map (renderInput login) fields)

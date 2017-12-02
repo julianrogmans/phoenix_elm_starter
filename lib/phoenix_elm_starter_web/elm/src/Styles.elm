@@ -1,6 +1,7 @@
 module Styles exposing (..)
 
-import Color exposing (rgba)
+-- import Color exposing (rgba)
+
 import Style exposing (..)
 import Style.Font as Font
 import Style.Color as Color
@@ -8,14 +9,15 @@ import Style.Color as Color
 
 type Selectors
     = None
-
-
-colors =
-    { primaryColor = rgba 144 144 144 1
-    }
+    | App
+    | Intup
+    | Submit
+    | Label
+    | Login
+    | Register
 
 
 stylesheet =
     Style.styleSheet
-        [ style None []
+        [ style App []
         ]

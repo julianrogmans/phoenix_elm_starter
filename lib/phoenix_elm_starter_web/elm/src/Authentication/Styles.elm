@@ -6,10 +6,6 @@ import Style.Font exposing (..)
 import Style.Color exposing (..)
 
 
-type Selectors
-    = None
-
-
 stylesheet =
     Style.styleSheet
         [ style None [] ]

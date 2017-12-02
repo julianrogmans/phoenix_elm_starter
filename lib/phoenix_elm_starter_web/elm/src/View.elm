@@ -3,7 +3,7 @@ module View exposing (render)
 import Element as Page exposing (text)
 import Element.Events as Events
 import Routing as Route
-import Styles exposing (stylesheet, Selectors(..))
+import Styles as S exposing (stylesheet)
 import Types exposing (Actions(..), State, Member)
 import Authentication.Login as Login
 import Authentication.Register as Register
@@ -11,44 +11,26 @@ import Authentication.Register as Register
 
 render state =
     Page.viewport stylesheet <|
-        Page.row None
+        Page.row S.App
             []
-            [ Page.mainContent None [] <|
+            [ Page.mainContent S.None [] <|
                 case state.route of
                     Just route ->
                         case route of
                             Route.Home ->
-                                Page.row None
-                                    []
-                                    [ Page.map HomeAction <|
-                                        text "Home"
-                                    ]
+                                text "Home"
 
                             Route.Login ->
-                                Page.row None
-                                    []
-                                    [ Page.map AuthAction <|
-                                        Login.layout state.login
-                                    ]
+                                Page.map AuthAction <|
+                                    Login.layout state.login
 
                             Route.Register ->
-                                Page.row None
-                                    []
-                                    [ Page.map AuthAction <|
-                                        Register.layout state.register
-                                    ]
+                                Page.map AuthAction <|
+                                    Register.layout state.register
 
                             Route.NotFound ->
-                                Page.row None
-                                    []
-                                    [ Page.map NotFoundAction <|
-                                        text "404 Not Found"
-                                    ]
+                                text "404 Not Found"
 
                     Nothing ->
-                        Page.row None
-                            []
-                            [ Page.map NotFoundAction <|
-                                text "404 Not Found"
-                            ]
+                        text "404 Not Found"
             ]
