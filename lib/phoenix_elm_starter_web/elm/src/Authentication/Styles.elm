@@ -7,12 +7,9 @@ import Style.Color exposing (..)
 
 
 type Selectors
-    = Login
-    | Form
-    | FormLabel
-    | FormInput
+    = None
 
 
 stylesheet =
     Style.styleSheet
-        [ style Login [] ]
+        [ style None [] ]

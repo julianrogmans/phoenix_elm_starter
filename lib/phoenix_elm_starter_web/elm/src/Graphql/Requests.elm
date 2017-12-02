@@ -3,6 +3,10 @@ module Graphql.Requests exposing (..)
 import Routing exposing (Route(..))
 
 
+baseUrl =
+    "/graphql"
+
+
 routeRequest : Maybe Route -> Cmd msg
 routeRequest route =
     case route of

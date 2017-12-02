@@ -1,7 +1,8 @@
-module Config exposing (..)
+module App exposing (..)
 
 import Navigation
 import UrlParser
+import Form exposing (Form)
 import RemoteData exposing (RemoteData(NotAsked))
 import Routing
 import Types
@@ -13,10 +14,10 @@ import Authentication.Register as Register
 
 initialState : Maybe Routing.Route -> Types.State
 initialState route =
-    { login = Login.initialState
+    { login = Form.initial [] Login.validate
     , members = NotAsked
     , session = NotAsked
-    , register = Register.initialState
+    , register = Form.initial [] Register.validate
     , route = route
     }
 
@@ -28,3 +29,8 @@ init location =
             UrlParser.parseLocation Routing.routes location
     in
         ( initialState currentRoute, Graphql.routeRequest currentRoute )
+
+
+subscriptions : a -> Sub msg
+subscriptions state =
+    Sub.none

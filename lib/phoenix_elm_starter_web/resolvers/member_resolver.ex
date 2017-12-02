@@ -15,7 +15,7 @@ defmodule PhoenixElmStarterWeb.MemberResolver do
     end
   end
 
-  def sign_in(_parent, args, _context) do
+  def login(_parent, args, _context) do
     case Session.authenticate(args) do
       {:ok, member} ->
         authentication_response member

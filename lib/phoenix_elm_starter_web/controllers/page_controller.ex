@@ -4,8 +4,4 @@ defmodule PhoenixElmStarterWeb.PageController do
   def index(conn, _params) do
     render conn, "index.html"
   end
-
-  def api_test(conn, _params) do
-    json conn, %{hello: "World"}
-  end
 end

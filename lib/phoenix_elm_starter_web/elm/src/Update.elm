@@ -5,7 +5,7 @@ import UrlParser
 import RemoteData exposing (RemoteData(..), fromResult)
 import Types exposing (Actions(..), State)
 import Routing exposing (routes)
-import Config
+import App
 import Authentication.Update as Authentication
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema as Schema
@@ -24,7 +24,7 @@ update msg model =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        Authentication message ->
+        AuthAction message ->
             let
                 ( newState, authenticationCmd ) =
                     Authentication.update message model
@@ -36,7 +36,7 @@ update msg model =
                 fromResult result
 
         Logout ->
-            ( Config.initialState Nothing, Cmd.none )
+            ( App.initialState Nothing, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

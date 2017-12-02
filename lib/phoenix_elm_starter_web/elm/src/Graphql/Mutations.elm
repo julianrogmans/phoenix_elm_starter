@@ -1,15 +1,42 @@
 module Graphql.Mutations exposing (..)
 
-import GraphQL.Request.Builder as Build exposing (extract, field)
+import GraphQL.Client.Http exposing (sendMutation)
+import GraphQL.Request.Builder as Build exposing (request, extract, field)
 import GraphQL.Request.Builder.Arg as Arg
 import GraphQL.Request.Builder.Variable as Var
 import Graphql.Schema exposing (session)
+import Graphql.Requests exposing (baseUrl)
+
+
+send data mutation =
+    sendMutation baseUrl <|
+        request data <|
+            Build.mutationDocument mutation
+
+
+login data =
+    let
+        email =
+            Var.required "email" .email Var.string
+
+        password =
+            Var.required "password" .password Var.string
+
+        arguments =
+            [ ( "email", Arg.variable email )
+            , ( "password", Arg.variable password )
+            ]
+    in
+        send data <|
+            extract <|
+                field "login" arguments session
+
 
 
 -- register  Types.RegisterState -> Task
 
 
-register =
+register data =
     let
         firstName =
             Var.required "firstName" .firstName Var.string
@@ -34,6 +61,6 @@ register =
             , ( "passwordConfirmation", Arg.variable passwordConfirmation )
             ]
     in
-        Build.mutationDocument <|
+        send data <|
             extract <|
                 field "register" arguments session

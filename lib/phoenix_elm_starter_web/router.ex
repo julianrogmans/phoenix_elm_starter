@@ -10,6 +10,9 @@ defmodule PhoenixElmStarterWeb.Router do
   end
 
   pipeline :api do
+    # plug Guardian.Plug.Pipeline, module: PhoenixElmStarterWeb.Guardian,
+    #                     error_handler: PhoenixElmStarterWeb.AuthErrorHandler
+    # plug Guardian.VerifyHeader, realm: "Bearer"
     plug :accepts, ["json"]
   end
 
@@ -18,7 +21,7 @@ defmodule PhoenixElmStarterWeb.Router do
 
   scope "/", PhoenixElmStarterWeb do
     pipe_through :browser # Use the default browser stack
-    
+
     get "/", PageController, :index
     get "/:page", PageController, :index
   end

@@ -1,6 +1,6 @@
 module Graphql.Types exposing (..)
 
-import RemoteData exposing (RemoteData(..), fromResult)
+import RemoteData exposing (RemoteData(..))
 import GraphQL.Client.Http exposing (Error(..))
 
 
@@ -21,11 +21,12 @@ resolve model message result =
 
                 Failure error ->
                     case error of
-                        GraphQLError _ ->
+                        GraphQLError gqlErrors ->
                             ( model, Cmd.none )
 
                         HttpError httpError ->
-                            -- promote401 from Jwt
+                            -- something needs to happen here to promote the http error
+                            -- to a JwtError to handle more granular HTTP responses
                             ( model, Cmd.none )
 
                 Success _ ->

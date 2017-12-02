@@ -4,11 +4,6 @@ defmodule PhoenixElmStarterWeb.Schema do
   alias PhoenixElmStarterWeb.MemberResolver
 
   query do
-    field :signin, :session do
-      arg :email, non_null(:string)
-      arg :password, non_null(:string)
-      resolve &MemberResolver.sign_in/3
-    end
   end
 
   mutation do
@@ -19,6 +14,12 @@ defmodule PhoenixElmStarterWeb.Schema do
       arg :password, non_null(:string)
       arg :password_confirmation, non_null(:string)
       resolve &MemberResolver.register/3
+    end
+
+    field :login, :session do
+      arg :email, non_null(:string)
+      arg :password, non_null(:string)
+      resolve &MemberResolver.login/3
     end
   end
 
