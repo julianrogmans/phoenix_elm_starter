@@ -1,19 +1,32 @@
 module Graphql.Mutations exposing (..)
 
-import GraphQL.Client.Http exposing (sendMutation)
-import GraphQL.Request.Builder as Build exposing (request, extract, field)
+import Task exposing (Task)
+import GraphQL.Client.Http exposing (Error, sendMutation)
+import GraphQL.Request.Builder as Build
+    exposing
+        ( ObjectType
+        , ValueSpec
+        , NonNull
+        , request
+        , extract
+        , field
+        )
 import GraphQL.Request.Builder.Arg as Arg
 import GraphQL.Request.Builder.Variable as Var
 import Graphql.Schema exposing (session)
 import Graphql.Requests exposing (baseUrl)
+import Types
+import Authentication.Types as Auth
 
 
+send : vars -> ValueSpec NonNull ObjectType result vars -> Task Error result
 send data mutation =
     sendMutation baseUrl <|
         request data <|
             Build.mutationDocument mutation
 
 
+login : Auth.LoginFormState -> Task Error Types.Session
 login data =
     let
         email =
@@ -32,10 +45,7 @@ login data =
                 field "login" arguments session
 
 
-
--- register  Types.RegisterState -> Task
-
-
+register : Auth.RegisterFormState -> Task Error Types.Session
 register data =
     let
         firstName =

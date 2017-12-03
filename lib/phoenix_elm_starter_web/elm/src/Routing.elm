@@ -3,7 +3,6 @@ module Routing exposing (..)
 import Json.Decode as Decode
 import Html exposing (Attribute)
 import Html.Events exposing (onWithOptions)
-import Navigation
 import UrlParser exposing (return, apply, follow, path, apply, oneOf)
 
 
@@ -14,11 +13,12 @@ type Route
     | NotFound
 
 
+routes : UrlParser.Parser Route
 routes =
     oneOf
         [ return Home
-        , return Login |> follow paths.login
-        , return Register |> follow paths.register
+        , return Login |> follow (path "login")
+        , return Register |> follow (path "signup")
         ]
 
 
@@ -31,9 +31,3 @@ onLinkClick message =
             }
     in
         onWithOptions "click" options (Decode.succeed message)
-
-
-paths =
-    { login = path "login"
-    , register = path "signup"
-    }

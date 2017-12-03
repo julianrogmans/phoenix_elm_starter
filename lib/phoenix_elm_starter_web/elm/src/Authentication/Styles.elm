@@ -6,6 +6,6 @@ import Style.Font exposing (..)
 import Style.Color exposing (..)
 
 
-stylesheet =
-    Style.styleSheet
-        [ style None [] ]
+styleSheet : Maybe a
+styleSheet =
+    Nothing

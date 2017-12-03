@@ -1,16 +1,18 @@
 module View exposing (render)
 
+import Html exposing (Html)
 import Element as Page exposing (text)
-import Element.Events as Events
 import Routing as Route
-import Styles as S exposing (stylesheet)
-import Types exposing (Actions(..), State, Member)
+import Styles as S exposing (styleSheet)
+import Types exposing (Action(..), State, Member)
+import Authentication.Types as Auth
 import Authentication.Login as Login
 import Authentication.Register as Register
 
 
+render : State -> Html (Action Auth.Action success)
 render state =
-    Page.viewport stylesheet <|
+    Page.viewport styleSheet <|
         Page.row S.App
             []
             [ Page.mainContent S.None [] <|

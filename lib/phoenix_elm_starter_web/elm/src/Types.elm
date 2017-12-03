@@ -1,9 +1,7 @@
 module Types exposing (..)
 
-import Json.Decode as Decode
 import Navigation
 import Form exposing (Form)
-import Form.Validate as Validate
 import GraphQL.Client.Http exposing (Error)
 import RemoteData exposing (RemoteData(Failure))
 import Graphql.Types exposing (GraphqlType)
@@ -39,7 +37,7 @@ type alias GraphqlData success =
     RemoteData Error success
 
 
-type Actions message success
+type Action message success
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location

@@ -1,7 +1,18 @@
 module Graphql.Queries exposing (..)
 
-import GraphQL.Request.Builder as Build exposing (extract, field, list)
+import GraphQL.Request.Builder as Build
+    exposing
+        ( ValueSpec
+        , ObjectType
+        , NonNull
+        , extract
+        , field
+        , list
+        )
 import Graphql.Schema exposing (member)
+
+
+-- allMembers : ValueSpec NonNull ObjectType result
 
 
 allMembers =

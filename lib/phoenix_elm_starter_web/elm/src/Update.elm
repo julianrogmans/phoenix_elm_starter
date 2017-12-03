@@ -3,15 +3,16 @@ module Update exposing (update)
 import Navigation
 import UrlParser
 import RemoteData exposing (RemoteData(..), fromResult)
-import Types exposing (Actions(..), State)
+import Types exposing (Action(..), State)
 import Routing exposing (routes)
 import App
+import Authentication.Types as Auth
 import Authentication.Update as Authentication
 import Graphql.Requests exposing (routeRequest)
-import Graphql.Schema as Schema
-import Graphql.Types exposing (resolve)
+import Graphql.Schema exposing (resolve)
 
 
+update : Action Auth.Action Types.Session -> State -> ( State, Cmd (Action Auth.Action Types.Session) )
 update msg model =
     case msg of
         NavigateTo url ->

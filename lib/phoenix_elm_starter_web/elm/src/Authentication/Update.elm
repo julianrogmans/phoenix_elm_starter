@@ -3,14 +3,15 @@ module Authentication.Update exposing (..)
 import Task
 import Form exposing (Form, Msg(Submit))
 import RemoteData exposing (RemoteData(..))
-import Types exposing (Actions(Graphql))
+import Types exposing (State)
 import Graphql.Types exposing (GraphqlType(Session))
 import Graphql.Mutations as Mutation
-import Authentication.Types exposing (Actions(..))
+import Authentication.Types exposing (Action(..))
 import Authentication.Register as Register
 import Authentication.Login as Login
 
 
+update : Action -> State -> ( State, Cmd (Types.Action Action Types.Session) )
 update msg ({ register, login } as model) =
     case msg of
         RegisterForm formMsg ->
@@ -24,7 +25,7 @@ update msg ({ register, login } as model) =
                             maybeSubmit =
                                 case Form.getOutput register of
                                     Just data ->
-                                        Task.attempt (Graphql Session) <|
+                                        Task.attempt (Types.Graphql Session) <|
                                             Mutation.register data
 
                                     Nothing ->
@@ -46,7 +47,7 @@ update msg ({ register, login } as model) =
                             maybeSubmit =
                                 case Form.getOutput login of
                                     Just data ->
-                                        Task.attempt (Graphql Session) <|
+                                        Task.attempt (Types.Graphql Session) <|
                                             Mutation.login data
 
                                     Nothing ->

@@ -3,6 +3,7 @@ module Graphql.Requests exposing (..)
 import Routing exposing (Route(..))
 
 
+baseUrl : String
 baseUrl =
     "/graphql"
 

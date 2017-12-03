@@ -1,15 +1,17 @@
 module Authentication.Form exposing (renderInput, submitButton)
 
 import Element as Page
-import Html.Attributes exposing (style)
+import Html.Attributes as Attribute exposing (style)
 import Element.Attributes as Add exposing (fill, fillPortion)
 import Element.Events as Event
 import Form exposing (Msg(Submit))
+import Form.Input exposing (Input)
 import Form.Input.Extra exposing (stringField)
 import Styles as S
 import Utils exposing (labelize)
 
 
+submitButton : String -> Page.Element S.Style variation Msg
 submitButton value =
     Page.button S.Submit
         [ Add.width fill
@@ -25,6 +27,10 @@ submitButton value =
         )
 
 
+renderInput :
+    Form.Form e o
+    -> ( String, Input e String )
+    -> Page.Element S.Style variation Msg
 renderInput state ( name, formType ) =
     let
         field =

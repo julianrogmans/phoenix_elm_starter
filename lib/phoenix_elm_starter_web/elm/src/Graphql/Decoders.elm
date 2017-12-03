@@ -1,10 +1,11 @@
 module Graphql.Decoders exposing (..)
 
-import Json.Decode exposing (string, int, nullable)
+import Json.Decode exposing (Decoder, string, int, nullable)
 import Json.Decode.Pipeline exposing (required, optional, decode)
 import Types exposing (Member, Session)
 
 
+memberDecoder : Decoder Member
 memberDecoder =
     decode Member
         |> required "id" string
@@ -14,6 +15,7 @@ memberDecoder =
         |> optional "last_sign_in" (nullable string) Nothing
 
 
+sessionDecoder : Decoder Session
 sessionDecoder =
     decode Session
         |> required "member" memberDecoder

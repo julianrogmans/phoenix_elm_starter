@@ -1,20 +1,28 @@
 module Form.Input.Extra exposing (emailInput, stringField, boolField)
 
-import String
-import Element
-import Form
+import Html exposing (Html, Attribute)
+import Element exposing (Element)
+import Form exposing (Form, FieldState)
 import Form.Input as Input
 import Form.Field as Field
+import Styles exposing (Style)
 
 
+type alias InputFlipped e a =
+    FieldState e a -> Html Form.Msg
+
+
+stringField : Form e o -> String -> InputFlipped e String -> Element Style variation Form.Msg
 stringField state name input =
     Element.html <| input <| Form.getFieldAsString name state
 
 
+boolField : Form e o -> String -> InputFlipped e Bool -> Element Style variation Form.Msg
 boolField state name input =
     Element.html <| input <| Form.getFieldAsBool name state
 
 
+emailInput : FieldState e String -> List (Attribute Form.Msg) -> Html Form.Msg
 emailInput field =
     Input.baseInput "email"
         Field.String

@@ -7,7 +7,6 @@ import RemoteData exposing (RemoteData(NotAsked))
 import Routing
 import Types
 import Graphql.Requests as Graphql
-import Graphql.Decoders exposing (sessionDecoder)
 import Authentication.Login as Login
 import Authentication.Register as Register
 

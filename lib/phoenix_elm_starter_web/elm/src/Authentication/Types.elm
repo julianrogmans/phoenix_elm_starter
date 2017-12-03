@@ -18,6 +18,6 @@ type alias RegisterFormState =
     }
 
 
-type Actions
+type Action
     = RegisterForm Form.Msg
     | LoginForm Form.Msg
