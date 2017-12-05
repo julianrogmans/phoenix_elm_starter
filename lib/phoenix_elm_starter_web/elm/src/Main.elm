@@ -3,7 +3,7 @@ module Main exposing (main)
 import Navigation
 import Update as State
 import App
-import View
+import View.Structure as View
 import Types exposing (Action(UrlChange))
 import Authentication.Types as Auth
 

@@ -15,6 +15,7 @@ type alias State =
     , session : GraphqlData Session
     , register : Form () RegisterFormState
     , route : Maybe Route
+    , hasClass : Bool
     }
 
 

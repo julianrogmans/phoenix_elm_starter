@@ -7,18 +7,19 @@ import Element.Events as Event
 import Form exposing (Msg(Submit))
 import Form.Input exposing (Input)
 import Form.Input.Extra exposing (stringField)
-import Styles as S
+import View.Style as Style exposing (Class)
+import Authentication.Styles as Auth
 import Utils exposing (labelize)
 
 
-submitButton : String -> Page.Element S.Style variation Msg
+submitButton : String -> Page.Element Class variation Msg
 submitButton value =
-    Page.button S.Submit
+    Page.button Style.Submit
         [ Add.width fill
         , Add.padding 10
         , Event.onClick Submit
         ]
-        (Page.el S.None
+        (Page.el Style.None
             [ Add.padding 5
             , Add.center
             , Add.verticalCenter
@@ -30,20 +31,20 @@ submitButton value =
 renderInput :
     Form.Form e o
     -> ( String, Input e String )
-    -> Page.Element S.Style variation Msg
+    -> Page.Element Class variation Msg
 renderInput state ( name, formType ) =
     let
         field =
             stringField state
     in
-        Page.row S.None
+        Page.row Style.None
             [ Add.padding 15, Add.spacing 15 ]
-            [ Page.el S.Label
+            [ Page.el Style.Label
                 [ Add.width (fillPortion 1)
                 , Add.verticalCenter
                 ]
-                (Page.el S.None [ Add.alignRight ] <| Page.text <| labelize name)
-            , Page.el S.None [ Add.width (fillPortion 3) ] <|
+                (Page.el Style.None [ Add.alignRight ] <| Page.text <| labelize name)
+            , Page.el Style.None [ Add.width (fillPortion 3) ] <|
                 field name <|
                     flip formType
                         [ style

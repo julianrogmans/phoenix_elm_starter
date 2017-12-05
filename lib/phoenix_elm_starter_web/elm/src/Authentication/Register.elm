@@ -9,7 +9,7 @@ import Form.Input exposing (textInput, passwordInput)
 import Form.Input.Extra exposing (emailInput, stringField)
 import Authentication.Types exposing (Action(..), RegisterFormState)
 import Authentication.Form exposing (renderInput, submitButton)
-import Styles as S
+import View.Style as Style exposing (Class)
 
 
 validate : V.Validation e RegisterFormState
@@ -22,17 +22,17 @@ validate =
         |> andMap (V.field "passwordConfirmation" V.string)
 
 
-layout : Form () RegisterFormState -> Element S.Style variation Action
+layout : Form () RegisterFormState -> Element Class variation Action
 layout register =
-    Page.column S.Register
+    Page.column Style.None
         [ Add.width fill ]
-        [ Page.h1 S.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
+        [ Page.h1 Style.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
         , Page.map RegisterForm <| renderForm register
         , Page.map RegisterForm <| submitButton "Register"
         ]
 
 
-renderForm : Form () RegisterFormState -> Element S.Style variation Form.Msg
+renderForm : Form () RegisterFormState -> Element Class variation Form.Msg
 renderForm register =
     let
         fields =
@@ -43,6 +43,6 @@ renderForm register =
             , ( "passwordConfirmation", passwordInput )
             ]
     in
-        Page.column S.None
+        Page.column Style.None
             [ Add.width fill ]
             (List.map (renderInput register) fields)

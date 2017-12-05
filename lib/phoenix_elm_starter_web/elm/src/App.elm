@@ -18,6 +18,7 @@ initialState route =
     , session = NotAsked
     , register = Form.initial [] Register.validate
     , route = route
+    , hasClass = True
     }
 
 
