@@ -13,7 +13,7 @@ import Authentication.Register as Register
 
 render : State -> Html (Action Auth.Action success)
 render state =
-    Page.viewport (styleSheet state) <|
+    Page.viewport (styleSheet state.route) <|
         Page.row Style.App
             []
             [ Page.mainContent Style.None [] <|
@@ -25,11 +25,11 @@ render state =
 
                             Route.Login ->
                                 Page.map AuthAction <|
-                                    Login.layout state.login
+                                    Login.layout state
 
                             Route.Register ->
                                 Page.map AuthAction <|
-                                    Register.layout state.register
+                                    Register.layout state
 
                             Route.NotFound ->
                                 text "404 Not Found"

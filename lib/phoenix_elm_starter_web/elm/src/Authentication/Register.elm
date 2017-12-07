@@ -7,6 +7,7 @@ import Form exposing (Form)
 import Form.Validate as V exposing (andMap)
 import Form.Input exposing (textInput, passwordInput)
 import Form.Input.Extra exposing (emailInput, stringField)
+import Types exposing (State)
 import Authentication.Types exposing (Action(..), RegisterFormState)
 import Authentication.Form exposing (renderInput, submitButton)
 import View.Style as Style exposing (Class)
@@ -22,13 +23,13 @@ validate =
         |> andMap (V.field "passwordConfirmation" V.string)
 
 
-layout : Form () RegisterFormState -> Element Class variation Action
-layout register =
+layout : State -> Element Class variation Action
+layout { register, session } =
     Page.column Style.None
         [ Add.width fill ]
         [ Page.h1 Style.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
         , Page.map RegisterForm <| renderForm register
-        , Page.map RegisterForm <| submitButton "Register"
+        , Page.map RegisterForm <| submitButton "Register" session
         ]
 
 

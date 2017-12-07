@@ -4,28 +4,39 @@ import Element as Page
 import Html.Attributes as Attribute exposing (style)
 import Element.Attributes as Add exposing (fill, fillPortion)
 import Element.Events as Event
+import RemoteData exposing (RemoteData(..))
 import Form exposing (Msg(Submit))
 import Form.Input exposing (Input)
 import Form.Input.Extra exposing (stringField)
 import View.Style as Style exposing (Class)
-import Authentication.Styles as Auth
+import Types exposing (GraphqlData, Session)
+import Authentication.Style as Auth
 import Utils exposing (labelize)
 
 
-submitButton : String -> Page.Element Class variation Msg
-submitButton value =
-    Page.button Style.Submit
-        [ Add.width fill
-        , Add.padding 10
-        , Event.onClick Submit
-        ]
-        (Page.el Style.None
-            [ Add.padding 5
-            , Add.center
-            , Add.verticalCenter
+submitButton : String -> GraphqlData Session -> Page.Element Class variation Msg
+submitButton value state =
+    let
+        isDisabled =
+            case state of
+                Loading ->
+                    True
+
+                _ ->
+                    False
+    in
+        Page.button (Style.Submit { disabled = isDisabled })
+            [ Add.width fill
+            , Add.padding 10
+            , Event.onClick Submit
             ]
-            (Page.text value)
-        )
+            (Page.el Style.None
+                [ Add.padding 5
+                , Add.center
+                , Add.verticalCenter
+                ]
+                (Page.text value)
+            )
 
 
 renderInput :
