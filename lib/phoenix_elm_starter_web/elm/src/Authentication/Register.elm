@@ -6,10 +6,10 @@ import Element.Attributes as Add exposing (fill, fillPortion, percent, px)
 import Form exposing (Form)
 import Form.Validate as V exposing (andMap)
 import Form.Input exposing (textInput, passwordInput)
-import Form.Input.Extra exposing (emailInput, stringField)
+import Form.Input.Extra exposing (emailInput)
 import Types exposing (State)
 import Authentication.Types exposing (Action(..), RegisterFormState)
-import Authentication.Form exposing (renderInput, submitButton)
+import Authentication.Common as Common exposing (submitButton)
 import View.Style as Style exposing (Class)
 
 
@@ -37,13 +37,12 @@ renderForm : Form () RegisterFormState -> Element Class variation Form.Msg
 renderForm register =
     let
         fields =
-            [ ( "firstName", textInput )
-            , ( "lastName", textInput )
-            , ( "email", emailInput )
-            , ( "password", passwordInput )
-            , ( "passwordConfirmation", passwordInput )
-            ]
+            List.map (Common.input register)
+                [ ( "firstName", textInput )
+                , ( "lastName", textInput )
+                , ( "email", emailInput )
+                , ( "password", passwordInput )
+                , ( "passwordConfirmation", passwordInput )
+                ]
     in
-        Page.column Style.None
-            [ Add.width fill ]
-            (List.map (renderInput register) fields)
+        Page.column Style.None [ Add.width fill ] fields
