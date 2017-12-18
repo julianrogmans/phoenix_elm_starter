@@ -15,6 +15,14 @@ defmodule PhoenixElmStarterWeb.Session do
     end
   end
 
+  def get_context(resolution, _) do
+    with %{value: %{token: token}} <- resolution do
+      Map.update!(resolution, :context, fn ctx ->
+        Map.put(ctx, :auth_token, token)
+      end)
+    end
+  end
+
   defp verify_password(password, pw_hash) do
     Comeonin.Bcrypt.checkpw(password, pw_hash)
   end

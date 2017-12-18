@@ -38,12 +38,12 @@ type alias GraphqlData success =
     RemoteData Error success
 
 
-type Action message success
+type Action subAction success
     = NoOp
     | NavigateTo String
     | UrlChange Navigation.Location
-    | HomeAction message
-    | AuthAction message
-    | NotFoundAction message
+    | HomeAction subAction
+    | AuthAction subAction
+    | NotFoundAction subAction
     | Graphql GraphqlType (Result Error success)
     | Logout
