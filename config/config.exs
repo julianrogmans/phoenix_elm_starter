@@ -17,6 +17,10 @@ config :phoenix_elm_starter, PhoenixElmStarterWeb.Endpoint,
   pubsub: [name: PhoenixElmStarter.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :phoenix_elm_starter, PhoenixElmStarterWeb.Guardian,
+  issuer: "phoenix_elm_starter",
+  secret_key: "0ysU/tQz24smo0qqZ4Kki/QXCb7U0MEhvEiEhkTr45lTkCpcPfHUpTsf2KM7E/T5"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
