@@ -1,5 +1,6 @@
 module Update exposing (update)
 
+import Dict
 import Task
 import Navigation
 import UrlParser
@@ -27,7 +28,16 @@ update msg ({ login, register } as model) =
                 ( { model | route = newRoute }, routeRequest newRoute )
 
         UpdateLoginForm fieldName formVal ->
-            ( { model | login = Forms.updateFormInput model.login fieldName formVal }, Cmd.none )
+            let
+                newModel =
+                    { model
+                        | login =
+                            { login
+                                | form = Forms.updateFormInput login.form fieldName formVal
+                            }
+                    }
+            in
+                update (UpdateLoginErrors fieldName) newModel
 
         SubmitLoginForm data ->
             ( { model | session = Loading }
@@ -37,7 +47,16 @@ update msg ({ login, register } as model) =
             )
 
         UpdateRegisterForm fieldName formVal ->
-            ( { model | register = Forms.updateFormInput model.register fieldName formVal }, Cmd.none )
+            let
+                newModel =
+                    { model
+                        | register =
+                            { register
+                                | form = Forms.updateFormInput register.form fieldName formVal
+                            }
+                    }
+            in
+                update (UpdateRegisterErrors fieldName) newModel
 
         SubmitRegisterForm data ->
             ( { model | session = Loading }
@@ -45,6 +64,46 @@ update msg ({ login, register } as model) =
                 Task.attempt AuthMutation <|
                     Mutation.register data
             )
+
+        UpdateLoginErrors fieldName ->
+            let
+                errorList =
+                    Forms.errorList login.form fieldName
+
+                error =
+                    case (errorList) of
+                        [] ->
+                            Nothing
+
+                        _ ->
+                            Just errorList
+            in
+                ( { model
+                    | login =
+                        { login | errors = Dict.insert fieldName error login.errors }
+                  }
+                , Cmd.none
+                )
+
+        UpdateRegisterErrors fieldName ->
+            let
+                errorList =
+                    Forms.errorList register.form fieldName
+
+                error =
+                    case (errorList) of
+                        [] ->
+                            Nothing
+
+                        _ ->
+                            Just errorList
+            in
+                ( { model
+                    | register =
+                        { register | errors = Dict.insert fieldName error register.errors }
+                  }
+                , Cmd.none
+                )
 
         Graphql message ->
             resolve model message

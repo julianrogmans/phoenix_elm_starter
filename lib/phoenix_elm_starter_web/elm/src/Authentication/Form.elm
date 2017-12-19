@@ -1,7 +1,7 @@
 module Authentication.Form exposing (..)
 
+import Dict
 import List exposing (map)
-import Tuple exposing (first)
 import Element as Page exposing (Element)
 import Element.Input as Input
 import Element.Events as Event
@@ -38,18 +38,41 @@ submitButton name message disabled =
             Page.text name
 
 
-errorFor : Form -> String -> List (Input.Option Class variation msg)
-errorFor form_ field =
+errorFor : String -> Types.FormErrors -> List (Input.Option Class variation msg)
+errorFor fieldName errorDict =
     let
-        errorString =
-            Forms.errorString form_ field
+        fieldErrors =
+            Dict.get fieldName errorDict
     in
-        case errorString of
-            "no errors" ->
+        case fieldErrors of
+            Nothing ->
                 []
 
-            error ->
-                [ Input.errorBelow <| Page.el Style.Error [] <| Page.text error ]
+            Just errors ->
+                case errors of
+                    Nothing ->
+                        []
+
+                    Just errorMessages ->
+                        let
+                            errorList =
+                                List.filterMap identity errorMessages
+                        in
+                            renderErrors errorList
+
+
+renderErrors errors =
+    let
+        errorString =
+            String.join ", " errors
+    in
+        if (List.isEmpty errors) then
+            []
+        else
+            [ Input.errorBelow <|
+                Page.el Style.Error [] <|
+                    Page.text errorString
+            ]
 
 
 hasError errors =

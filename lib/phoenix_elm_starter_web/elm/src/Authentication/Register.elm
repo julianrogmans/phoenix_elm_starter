@@ -5,8 +5,19 @@ import RemoteData exposing (isLoading)
 import Element as Page exposing (Element)
 import Element.Input as Input
 import Element.Attributes as Add exposing (fill, fillPortion, percent, px)
+import Element.Events as Event
 import Forms
-import Types exposing (State, RegisterForm, Action(SubmitRegisterForm, UpdateRegisterForm))
+import Types
+    exposing
+        ( State
+        , FormState
+        , RegisterForm
+        , Action
+            ( SubmitRegisterForm
+            , UpdateRegisterForm
+            , UpdateRegisterErrors
+            )
+        )
 import Utils exposing (labelize)
 import Authentication.Form exposing (registerFormFields, submitButton, errorFor, hasError)
 import View.Style as Style exposing (Class)
@@ -17,11 +28,11 @@ layout { register, session } =
     let
         data : RegisterForm
         data =
-            { firstName = Forms.formValue register "firstName"
-            , lastName = Forms.formValue register "lastName"
-            , email = Forms.formValue register "email"
-            , password = Forms.formValue register "password"
-            , passwordConfirmation = Forms.formValue register "passwordConfirmation"
+            { firstName = Forms.formValue register.form "firstName"
+            , lastName = Forms.formValue register.form "lastName"
+            , email = Forms.formValue register.form "email"
+            , password = Forms.formValue register.form "password"
+            , passwordConfirmation = Forms.formValue register.form "passwordConfirmation"
             }
     in
         Page.column Style.None
@@ -32,20 +43,24 @@ layout { register, session } =
             ]
 
 
-registerForm : Forms.Form -> Element Class variation Action
-registerForm form_ =
+registerForm : FormState -> Element Class variation Action
+registerForm { form, errors } =
     let
         fieldError =
-            errorFor form_
+            flip errorFor errors
 
         fields =
             List.map Tuple.first registerFormFields
                 |> List.map
                     (\fieldName ->
-                        Input.text (Style.Input { error = hasError <| fieldError fieldName })
-                            [ Add.width fill, Add.padding 5 ]
+                        Input.text
+                            (Style.Input { error = hasError <| fieldError fieldName })
+                            [ Add.width fill
+                            , Add.padding 5
+                            , Event.onBlur <| UpdateRegisterErrors fieldName
+                            ]
                             { onChange = UpdateRegisterForm fieldName
-                            , value = Forms.formValue form_ fieldName
+                            , value = Forms.formValue form fieldName
                             , label =
                                 Input.placeholder
                                     { label = Input.labelAbove <| Page.empty

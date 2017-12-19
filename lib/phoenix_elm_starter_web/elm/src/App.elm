@@ -1,5 +1,6 @@
 module App exposing (..)
 
+import Dict
 import Navigation
 import UrlParser
 import Forms exposing (Form)
@@ -12,10 +13,16 @@ import Authentication.Form exposing (loginFormFields, registerFormFields)
 
 initialState : Maybe Routing.Route -> Types.State
 initialState route =
-    { login = Forms.initForm loginFormFields
+    { login =
+        { form = Forms.initForm loginFormFields
+        , errors = Dict.empty
+        }
     , members = NotAsked
     , session = NotAsked
-    , register = Forms.initForm registerFormFields
+    , register =
+        { form = Forms.initForm registerFormFields
+        , errors = Dict.empty
+        }
     , route = route
     , hasClass = True
     }

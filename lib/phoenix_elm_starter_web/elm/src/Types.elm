@@ -1,5 +1,6 @@
 module Types exposing (..)
 
+import Dict exposing (Dict)
 import Navigation
 import Forms
 import GraphQL.Client.Http exposing (Error)
@@ -8,13 +9,23 @@ import Routing exposing (Route)
 
 
 type alias State =
-    { login : Forms.Form
+    { login : FormState
     , members : GraphqlData (List Member)
     , session : GraphqlData Session
-    , register : Forms.Form
+    , register : FormState
     , route : Maybe Route
     , hasClass : Bool
     }
+
+
+type alias FormState =
+    { form : Forms.Form
+    , errors : FormErrors
+    }
+
+
+type alias FormErrors =
+    Dict String (Maybe (List Forms.ValidationError))
 
 
 type alias Member =
@@ -68,5 +79,7 @@ type Action
     | SubmitLoginForm LoginForm
     | UpdateRegisterForm String String
     | SubmitRegisterForm RegisterForm
+    | UpdateLoginErrors String
+    | UpdateRegisterErrors String
     | Graphql GraphqlAction
     | Logout
