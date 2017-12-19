@@ -1,42 +1,24 @@
 module Graphql.Schema exposing (..)
 
-import RemoteData exposing (RemoteData(..))
+import RemoteData exposing (RemoteData(..), fromResult)
 import GraphQL.Client.Http exposing (Error(..))
 import GraphQL.Request.Builder exposing (..)
-import Types as App
-import Graphql.Types exposing (GraphqlType(..))
+import Types exposing (State, Action, GraphqlAction(..), Session, Member)
 
 
-resolve model message result =
+resolve : State -> GraphqlAction -> ( State, Cmd Action )
+resolve model message =
     case message of
-        Session ->
-            case result of
-                NotAsked ->
-                    ( model, Cmd.none )
+        AllMembersQuery result ->
+            ( { model | members = fromResult result }, Cmd.none )
 
-                Loading ->
-                    ( { model | session = Loading }, Cmd.none )
-
-                Failure error ->
-                    case error of
-                        GraphQLError gqlErrors ->
-                            ( model, Cmd.none )
-
-                        HttpError httpError ->
-                            -- something needs to happen here to promote the http error
-                            -- to a JwtError to handle more granular HTTP responses
-                            ( model, Cmd.none )
-
-                Success _ ->
-                    ( { model | session = result }, Cmd.none )
-
-        Members ->
-            ( model, Cmd.none )
+        AuthMutation result ->
+            ( { model | session = fromResult result }, Cmd.none )
 
 
-member : ValueSpec NonNull ObjectType App.Member vars
+member : ValueSpec NonNull ObjectType Member vars
 member =
-    object App.Member
+    object Member
         |> with (field "id" [] id)
         |> with (field "firstName" [] string)
         |> with (field "lastName" [] string)
@@ -44,8 +26,8 @@ member =
         |> with (field "lastSignIn" [] (nullable string))
 
 
-session : ValueSpec NonNull ObjectType App.Session vars
+session : ValueSpec NonNull ObjectType Session vars
 session =
-    object App.Session
+    object Session
         |> with (field "member" [] member)
         |> with (field "token" [] string)

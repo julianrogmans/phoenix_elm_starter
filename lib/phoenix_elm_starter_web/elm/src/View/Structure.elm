@@ -6,12 +6,11 @@ import Routing as Route
 import View.Display exposing (styleSheet)
 import View.Style as Style
 import Types exposing (Action(..), State, Member)
-import Authentication.Types as Auth
 import Authentication.Login as Login
 import Authentication.Register as Register
 
 
-render : State -> Html (Action Auth.Action success)
+render : State -> Html Action
 render state =
     Page.viewport (styleSheet state.route) <|
         Page.row Style.App
@@ -24,12 +23,10 @@ render state =
                                 text "Home"
 
                             Route.Login ->
-                                Page.map AuthAction <|
-                                    Login.layout state
+                                Login.layout state
 
                             Route.Register ->
-                                Page.map AuthAction <|
-                                    Register.layout state
+                                Register.layout state
 
                             Route.NotFound ->
                                 text "404 Not Found"

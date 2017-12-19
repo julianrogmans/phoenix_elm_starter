@@ -1,19 +1,20 @@
 module Update exposing (update)
 
+import Task
 import Navigation
 import UrlParser
 import RemoteData exposing (RemoteData(..), fromResult)
-import Types exposing (Action(..), State)
+import Forms
+import Types exposing (Action(..), State, GraphqlAction(..))
 import Routing exposing (routes)
 import App
-import Authentication.Types as Auth
-import Authentication.Update as Authentication
 import Graphql.Requests exposing (routeRequest)
 import Graphql.Schema exposing (resolve)
+import Graphql.Mutations as Mutation
 
 
-update : Action Auth.Action Types.Session -> State -> ( State, Cmd (Action Auth.Action Types.Session) )
-update msg model =
+update : Action -> State -> ( State, Cmd Action )
+update msg ({ login, register } as model) =
     case msg of
         NavigateTo url ->
             ( model, Navigation.newUrl url )
@@ -25,16 +26,28 @@ update msg model =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        AuthAction message ->
-            let
-                ( newState, authenticationCmd ) =
-                    Authentication.update message model
-            in
-                ( newState, authenticationCmd )
+        UpdateLoginForm fieldName formVal ->
+            ( { model | login = Forms.updateFormInput model.login fieldName formVal }, Cmd.none )
 
-        Graphql message result ->
-            resolve model message <|
-                fromResult result
+        SubmitLoginForm data ->
+            ( { model | session = Loading }
+            , Cmd.map Graphql <|
+                Task.attempt AuthMutation <|
+                    Mutation.login data
+            )
+
+        UpdateRegisterForm fieldName formVal ->
+            ( { model | register = Forms.updateFormInput model.register fieldName formVal }, Cmd.none )
+
+        SubmitRegisterForm data ->
+            ( { model | session = Loading }
+            , Cmd.map Graphql <|
+                Task.attempt AuthMutation <|
+                    Mutation.register data
+            )
+
+        Graphql message ->
+            resolve model message
 
         Logout ->
             ( App.initialState Nothing, Cmd.none )

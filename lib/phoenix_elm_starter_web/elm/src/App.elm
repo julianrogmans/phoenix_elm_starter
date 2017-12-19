@@ -2,21 +2,20 @@ module App exposing (..)
 
 import Navigation
 import UrlParser
-import Form exposing (Form)
+import Forms exposing (Form)
 import RemoteData exposing (RemoteData(NotAsked))
 import Routing
 import Types
 import Graphql.Requests as Graphql
-import Authentication.Login as Login
-import Authentication.Register as Register
+import Authentication.Form exposing (loginFormFields, registerFormFields)
 
 
 initialState : Maybe Routing.Route -> Types.State
 initialState route =
-    { login = Form.initial [] Login.validate
+    { login = Forms.initForm loginFormFields
     , members = NotAsked
     , session = NotAsked
-    , register = Form.initial [] Register.validate
+    , register = Forms.initForm registerFormFields
     , route = route
     , hasClass = True
     }

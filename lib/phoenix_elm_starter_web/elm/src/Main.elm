@@ -5,10 +5,9 @@ import Update as State
 import App
 import View.Structure as View
 import Types exposing (Action(UrlChange))
-import Authentication.Types as Auth
 
 
-main : Program Never Types.State (Action Auth.Action Types.Session)
+main : Program Never Types.State Action
 main =
     Navigation.program UrlChange
         { init = App.init

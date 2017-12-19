@@ -6,12 +6,15 @@ import Color
 import Style.Font as Font
 import Style.Border as Border
 import Style.Color as Color
+import Style.Scale as Scale
 
 
 type Class
     = None
     | App
-    | Intup
+    | Input InputOptions
+    | Button
+    | Error
     | LargeHeader
     | Submit SubmitOptions
     | Label
@@ -21,8 +24,16 @@ type alias SubmitOptions =
     { disabled : Bool }
 
 
+type alias InputOptions =
+    { error : Bool }
+
+
 type alias StyleFunction variation =
     Class -> List (Property Class variation) -> Style Class variation
+
+
+scaled =
+    Scale.modular 16 1.618
 
 
 button : StyleFunction variation
@@ -36,6 +47,17 @@ button class props =
             props
 
 
+input : StyleFunction variation
+input class props =
+    style class <|
+        append
+            [ Font.size <| scaled 1
+            , Border.all 1
+            , Border.rounded 5
+            ]
+            props
+
+
 styles : List (Style Class variation)
 styles =
     [ style App
@@ -44,5 +66,7 @@ styles =
     , button (Submit { disabled = True })
         [ Color.background Color.lightGrey ]
     , style LargeHeader
-        [ Font.size 30 ]
+        [ Font.size <| scaled 3 ]
+    , input (Input { error = True }) [ Color.border Color.red ]
+    , input (Input { error = False }) [ Color.border Color.darkGrey ]
     ]

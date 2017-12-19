@@ -1,48 +1,58 @@
 module Authentication.Register exposing (..)
 
 import List
+import RemoteData exposing (isLoading)
 import Element as Page exposing (Element)
+import Element.Input as Input
 import Element.Attributes as Add exposing (fill, fillPortion, percent, px)
-import Form exposing (Form)
-import Form.Validate as V exposing (andMap)
-import Form.Input exposing (textInput, passwordInput)
-import Form.Input.Extra exposing (emailInput)
-import Types exposing (State)
-import Authentication.Types exposing (Action(..), RegisterFormState)
-import Authentication.Common as Common exposing (submitButton)
+import Forms
+import Types exposing (State, RegisterForm, Action(SubmitRegisterForm, UpdateRegisterForm))
+import Utils exposing (labelize)
+import Authentication.Form exposing (registerFormFields, submitButton, errorFor, hasError)
 import View.Style as Style exposing (Class)
-
-
-validate : V.Validation e RegisterFormState
-validate =
-    V.succeed RegisterFormState
-        |> andMap (V.field "firstName" V.string)
-        |> andMap (V.field "lastName" V.string)
-        |> andMap (V.field "email" V.email)
-        |> andMap (V.field "password" V.string)
-        |> andMap (V.field "passwordConfirmation" V.string)
 
 
 layout : State -> Element Class variation Action
 layout { register, session } =
-    Page.column Style.None
-        [ Add.width fill ]
-        [ Page.h1 Style.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
-        , Page.map RegisterForm <| renderForm register
-        , Page.map RegisterForm <| submitButton "Register" session
-        ]
-
-
-renderForm : Form () RegisterFormState -> Element Class variation Form.Msg
-renderForm register =
     let
-        fields =
-            List.map (Common.input register)
-                [ ( "firstName", textInput )
-                , ( "lastName", textInput )
-                , ( "email", emailInput )
-                , ( "password", passwordInput )
-                , ( "passwordConfirmation", passwordInput )
-                ]
+        data : RegisterForm
+        data =
+            { firstName = Forms.formValue register "firstName"
+            , lastName = Forms.formValue register "lastName"
+            , email = Forms.formValue register "email"
+            , password = Forms.formValue register "password"
+            , passwordConfirmation = Forms.formValue register "passwordConfirmation"
+            }
     in
-        Page.column Style.None [ Add.width fill ] fields
+        Page.column Style.None
+            [ Add.width fill ]
+            [ Page.h1 Style.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
+            , registerForm register
+            , submitButton "Register" (SubmitRegisterForm data) (isLoading session)
+            ]
+
+
+registerForm : Forms.Form -> Element Class variation Action
+registerForm form_ =
+    let
+        fieldError =
+            errorFor form_
+
+        fields =
+            List.map Tuple.first registerFormFields
+                |> List.map
+                    (\fieldName ->
+                        Input.text (Style.Input { error = hasError <| fieldError fieldName })
+                            [ Add.width fill, Add.padding 5 ]
+                            { onChange = UpdateRegisterForm fieldName
+                            , value = Forms.formValue form_ fieldName
+                            , label =
+                                Input.placeholder
+                                    { label = Input.labelAbove <| Page.empty
+                                    , text = labelize fieldName
+                                    }
+                            , options = fieldError fieldName
+                            }
+                    )
+    in
+        Page.column Style.None [ Add.width fill, Add.spacing 15 ] fields

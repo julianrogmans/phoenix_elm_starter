@@ -16,7 +16,6 @@ import GraphQL.Request.Builder.Variable as Var
 import Graphql.Schema exposing (session)
 import Graphql.Requests exposing (baseUrl)
 import Types
-import Authentication.Types as Auth
 
 
 send : vars -> ValueSpec NonNull ObjectType result vars -> Task Error result
@@ -26,7 +25,7 @@ send data mutation =
             Build.mutationDocument mutation
 
 
-login : Auth.LoginFormState -> Task Error Types.Session
+login : Types.LoginForm -> Task Error Types.Session
 login data =
     let
         email =
@@ -45,7 +44,7 @@ login data =
                 field "login" arguments session
 
 
-register : Auth.RegisterFormState -> Task Error Types.Session
+register : Types.RegisterForm -> Task Error Types.Session
 register data =
     let
         firstName =
