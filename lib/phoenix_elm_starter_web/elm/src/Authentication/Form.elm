@@ -1,12 +1,11 @@
 module Authentication.Form exposing (..)
 
-import Dict
 import List exposing (map)
 import Element as Page exposing (Element)
 import Element.Input as Input
 import Element.Events as Event
 import Element.Attributes as Add exposing (fill, px)
-import Forms exposing (Form, initForm)
+import Forms exposing (Form, ValidationError, initForm)
 import Types exposing (Action)
 import View.Style as Style exposing (Class)
 
@@ -22,7 +21,7 @@ registerFormFields =
     , ( "lastName", [ Forms.validateExistence ] )
     , ( "email", [ Forms.validateExistence ] )
     , ( "password", [ Forms.validateExistence ] )
-    , ( "passwordConfirmation", [ Forms.validateExistence ] )
+    , ( "passwordConfirmation", [] )
     ]
 
 
@@ -38,47 +37,25 @@ submitButton name message disabled =
             Page.text name
 
 
-errorFor : String -> Types.FormErrors -> List (Input.Option Class variation msg)
-errorFor fieldName errorDict =
-    let
-        fieldErrors =
-            Dict.get fieldName errorDict
-    in
-        case fieldErrors of
-            Nothing ->
-                []
-
-            Just errors ->
-                case errors of
-                    Nothing ->
-                        []
-
-                    Just errorMessages ->
-                        let
-                            errorList =
-                                List.filterMap identity errorMessages
-                        in
-                            renderErrors errorList
-
-
+renderErrors : Maybe (List ValidationError) -> List (Input.Option Class variation Action)
 renderErrors errors =
-    let
-        errorString =
-            String.join ", " errors
-    in
-        if (List.isEmpty errors) then
-            []
-        else
-            [ Input.errorBelow <|
-                Page.el Style.Error [ Add.width fill, Add.padding 5 ] <|
-                    Page.text errorString
-            ]
-
-
-hasError errors =
     case errors of
-        [] ->
-            False
+        Nothing ->
+            []
 
-        _ ->
-            True
+        Just errorList ->
+            let
+                messages =
+                    List.filterMap identity errorList
+            in
+                if (List.isEmpty messages) then
+                    []
+                else
+                    let
+                        errorString =
+                            String.join ", " messages
+                    in
+                        [ Input.errorBelow <|
+                            Page.el Style.Error [ Add.width fill, Add.padding 5 ] <|
+                                Page.text errorString
+                        ]

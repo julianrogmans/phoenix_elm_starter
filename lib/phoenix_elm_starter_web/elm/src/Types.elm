@@ -2,7 +2,7 @@ module Types exposing (..)
 
 import Dict exposing (Dict)
 import Navigation
-import Forms
+import Forms exposing (ValidationError)
 import GraphQL.Client.Http exposing (Error)
 import RemoteData exposing (RemoteData(Failure))
 import Routing exposing (Route)
@@ -25,7 +25,7 @@ type alias FormState =
 
 
 type alias FormErrors =
-    Dict String (Maybe (List Forms.ValidationError))
+    Dict String (List ValidationError)
 
 
 type alias Member =

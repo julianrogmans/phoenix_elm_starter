@@ -1,5 +1,6 @@
 module Authentication.Login exposing (..)
 
+import Dict exposing (get)
 import List
 import Tuple
 import RemoteData exposing (isLoading)
@@ -8,6 +9,7 @@ import Element.Input as Input
 import Element.Attributes as Add exposing (fill, px)
 import Element.Events as Event
 import Forms
+import Form
 import Types
     exposing
         ( State
@@ -20,7 +22,12 @@ import Types
             )
         )
 import Utils exposing (labelize)
-import Authentication.Form exposing (loginFormFields, submitButton, errorFor, hasError)
+import Authentication.Form
+    exposing
+        ( loginFormFields
+        , submitButton
+        , renderErrors
+        )
 import View.Style as Style exposing (Class)
 
 
@@ -44,27 +51,24 @@ layout { login, session } =
 loginForm : FormState -> Element Class variation Action
 loginForm { form, errors } =
     let
-        fieldError =
-            flip errorFor errors
-
         fields =
             List.map Tuple.first loginFormFields
                 |> List.map
-                    (\fieldName ->
+                    (\field ->
                         Input.text
-                            (Style.Input { error = hasError <| fieldError fieldName })
+                            (Style.Input { error = Form.hasError <| get field errors })
                             [ Add.width fill
                             , Add.padding 5
-                            , Event.onBlur <| UpdateLoginErrors fieldName
+                            , Event.onBlur <| UpdateLoginErrors field
                             ]
-                            { onChange = UpdateLoginForm fieldName
-                            , value = Forms.formValue form fieldName
+                            { onChange = UpdateLoginForm field
+                            , value = Forms.formValue form field
                             , label =
                                 Input.placeholder
                                     { label = Input.labelAbove <| Page.empty
-                                    , text = labelize fieldName
+                                    , text = labelize field
                                     }
-                            , options = fieldError fieldName
+                            , options = renderErrors <| get field errors
                             }
                     )
     in

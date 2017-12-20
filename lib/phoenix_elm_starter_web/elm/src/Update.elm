@@ -6,6 +6,7 @@ import Navigation
 import UrlParser
 import RemoteData exposing (RemoteData(..), fromResult)
 import Forms
+import Form
 import Types exposing (Action(..), State, GraphqlAction(..))
 import Routing exposing (routes)
 import App
@@ -27,17 +28,14 @@ update msg ({ login, register } as model) =
             in
                 ( { model | route = newRoute }, routeRequest newRoute )
 
-        UpdateLoginForm fieldName formVal ->
-            let
-                newModel =
-                    { model
-                        | login =
-                            { login
-                                | form = Forms.updateFormInput login.form fieldName formVal
-                            }
+        UpdateLoginForm field value ->
+            { model
+                | login =
+                    { login
+                        | form = Forms.updateFormInput login.form field value
                     }
-            in
-                update (UpdateLoginErrors fieldName) newModel
+            }
+                |> update (UpdateLoginErrors field)
 
         SubmitLoginForm data ->
             ( { model | session = Loading }
@@ -46,17 +44,14 @@ update msg ({ login, register } as model) =
                     Mutation.login data
             )
 
-        UpdateRegisterForm fieldName formVal ->
-            let
-                newModel =
-                    { model
-                        | register =
-                            { register
-                                | form = Forms.updateFormInput register.form fieldName formVal
-                            }
+        UpdateRegisterForm field value ->
+            { model
+                | register =
+                    { register
+                        | form = Forms.updateFormInput register.form field value
                     }
-            in
-                update (UpdateRegisterErrors fieldName) newModel
+            }
+                |> update (UpdateRegisterErrors field)
 
         SubmitRegisterForm data ->
             ( { model | session = Loading }
@@ -65,43 +60,33 @@ update msg ({ login, register } as model) =
                     Mutation.register data
             )
 
-        UpdateLoginErrors fieldName ->
+        UpdateLoginErrors field ->
+            ( { model
+                | login =
+                    { login
+                        | errors =
+                            Form.updateFormError login.errors field <|
+                                Forms.errorList login.form field
+                    }
+              }
+            , Cmd.none
+            )
+
+        UpdateRegisterErrors field ->
             let
-                errorList =
-                    Forms.errorList login.form fieldName
+                ( password, confirmation ) =
+                    ( Forms.formValue register.form "password"
+                    , Forms.formValue register.form "passwordConfirmation"
+                    )
 
-                error =
-                    case (errorList) of
-                        [] ->
-                            Nothing
-
-                        _ ->
-                            Just errorList
+                errors =
+                    Forms.errorList register.form field
+                        |> Form.updateFormError register.errors field
+                        |> Dict.insert
+                            "passwordConfirmation"
+                            [ Form.validateEqual password confirmation ]
             in
-                ( { model
-                    | login =
-                        { login | errors = Dict.insert fieldName error login.errors }
-                  }
-                , Cmd.none
-                )
-
-        UpdateRegisterErrors fieldName ->
-            let
-                errorList =
-                    Forms.errorList register.form fieldName
-
-                error =
-                    case (errorList) of
-                        [] ->
-                            Nothing
-
-                        _ ->
-                            Just errorList
-            in
-                ( { model
-                    | register =
-                        { register | errors = Dict.insert fieldName error register.errors }
-                  }
+                ( { model | register = { register | errors = errors } }
                 , Cmd.none
                 )
 

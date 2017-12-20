@@ -1,5 +1,6 @@
 module Authentication.Register exposing (..)
 
+import Dict exposing (get)
 import List
 import RemoteData exposing (isLoading)
 import Element as Page exposing (Element)
@@ -7,6 +8,7 @@ import Element.Input as Input
 import Element.Attributes as Add exposing (fill, fillPortion, percent, px)
 import Element.Events as Event
 import Forms
+import Form
 import Types
     exposing
         ( State
@@ -19,7 +21,12 @@ import Types
             )
         )
 import Utils exposing (labelize)
-import Authentication.Form exposing (registerFormFields, submitButton, errorFor, hasError)
+import Authentication.Form
+    exposing
+        ( registerFormFields
+        , submitButton
+        , renderErrors
+        )
 import View.Style as Style exposing (Class)
 
 
@@ -46,27 +53,24 @@ layout { register, session } =
 registerForm : FormState -> Element Class variation Action
 registerForm { form, errors } =
     let
-        fieldError =
-            flip errorFor errors
-
         fields =
             List.map Tuple.first registerFormFields
                 |> List.map
-                    (\fieldName ->
+                    (\field ->
                         Input.text
-                            (Style.Input { error = hasError <| fieldError fieldName })
+                            (Style.Input { error = Form.hasError <| get field errors })
                             [ Add.width fill
                             , Add.padding 5
-                            , Event.onBlur <| UpdateRegisterErrors fieldName
+                            , Event.onBlur <| UpdateRegisterErrors field
                             ]
-                            { onChange = UpdateRegisterForm fieldName
-                            , value = Forms.formValue form fieldName
+                            { onChange = UpdateRegisterForm field
+                            , value = Forms.formValue form field
                             , label =
                                 Input.placeholder
                                     { label = Input.labelAbove <| Page.empty
-                                    , text = labelize fieldName
+                                    , text = labelize field
                                     }
-                            , options = fieldError fieldName
+                            , options = renderErrors <| get field errors
                             }
                     )
     in
