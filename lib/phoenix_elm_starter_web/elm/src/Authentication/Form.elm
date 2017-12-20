@@ -70,7 +70,7 @@ renderErrors errors =
             []
         else
             [ Input.errorBelow <|
-                Page.el Style.Error [] <|
+                Page.el Style.Error [ Add.width fill, Add.padding 5 ] <|
                     Page.text errorString
             ]
 

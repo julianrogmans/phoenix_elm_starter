@@ -36,7 +36,7 @@ layout { register, session } =
             }
     in
         Page.column Style.None
-            [ Add.width fill ]
+            [ Add.width fill, Add.spacing 15 ]
             [ Page.h1 Style.LargeHeader [ Add.center, Add.padding 10 ] <| Page.text "Sign Up"
             , registerForm register
             , submitButton "Register" (SubmitRegisterForm data) (isLoading session)

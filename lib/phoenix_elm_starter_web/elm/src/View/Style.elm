@@ -67,6 +67,21 @@ styles =
         [ Color.background Color.lightGrey ]
     , style LargeHeader
         [ Font.size <| scaled 3 ]
-    , input (Input { error = True }) [ Color.border Color.red ]
-    , input (Input { error = False }) [ Color.border Color.darkGrey ]
+    , input (Input { error = True })
+        [ Color.border Color.red
+        , Border.roundBottomLeft 0
+        , Border.roundBottomRight 0
+        ]
+    , input (Input { error = False })
+        [ Color.border Color.darkGrey
+        ]
+    , style Error
+        [ Color.background Color.red
+        , Color.text Color.white
+        , Font.size <| scaled 1
+        , Font.bold
+        , Border.roundBottomLeft 5
+        , Border.roundBottomRight 5
+        , Style.translate 0 -7 0
+        ]
     ]
