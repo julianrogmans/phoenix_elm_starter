@@ -1,5 +1,7 @@
 module Graphql.Schema exposing (..)
 
+import List
+import Dict
 import RemoteData exposing (RemoteData(..), fromResult)
 import GraphQL.Client.Http exposing (Error(..))
 import GraphQL.Request.Builder exposing (..)
@@ -10,7 +12,19 @@ resolve : State -> GraphqlAction -> ( State, Cmd Action )
 resolve model message =
     case message of
         AllMembersQuery result ->
-            ( { model | members = fromResult result }, Cmd.none )
+            let
+                members =
+                    case result of
+                        Ok data ->
+                            data
+                                |> List.map (\item -> ( item.id, item ))
+                                |> Dict.fromList
+                                |> Success
+
+                        Err errors ->
+                            Failure errors
+            in
+                ( { model | members = members }, Cmd.none )
 
         AuthMutation result ->
             ( { model | session = fromResult result }, Cmd.none )

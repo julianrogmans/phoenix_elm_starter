@@ -10,7 +10,7 @@ import Routing exposing (Route)
 
 type alias State =
     { login : FormState
-    , members : GraphqlData (List Member)
+    , members : GraphqlData (Dict String Member)
     , session : GraphqlData Session
     , register : FormState
     , route : Maybe Route

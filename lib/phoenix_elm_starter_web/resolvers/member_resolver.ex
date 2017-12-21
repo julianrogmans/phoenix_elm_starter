@@ -3,6 +3,11 @@ defmodule PhoenixElmStarterWeb.MemberResolver do
   alias PhoenixElmStarter.Accounts.Member
   alias PhoenixElmStarterWeb.Session
 
+
+  def all_members(_parent, _args, _context) do
+    {:ok, Accounts.list_members}
+  end
+
   def register(_parent, args, _context) do
     case Accounts.create_member(args) do
       {:ok, member} ->

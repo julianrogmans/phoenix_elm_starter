@@ -4,6 +4,9 @@ defmodule PhoenixElmStarterWeb.Schema do
   alias PhoenixElmStarterWeb.{Session, MemberResolver}
 
   query do
+    field :members, list_of(:member) do
+      resolve &MemberResolver.all_members/3
+    end
   end
 
   mutation do

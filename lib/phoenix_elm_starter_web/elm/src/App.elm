@@ -28,7 +28,7 @@ initialState route =
     }
 
 
-init : Navigation.Location -> ( Types.State, Cmd msg )
+init : Navigation.Location -> ( Types.State, Cmd Types.Action )
 init location =
     let
         currentRoute =
